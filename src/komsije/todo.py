@@ -4,7 +4,7 @@
     python -m komsije.todo --geocode     # плюс предложить точки из OpenStreetMap (1 запрос в секунду)
     python -m komsije.todo --csv x.csv   # из локального CSV
 
-Точка «надежно» — только если OpenStreetMap нашел тот же номер дома внутри границ того же города.
+Точка «надежно» — только если OpenStreetMap нашел тот же номер дома внутри границ того же города, и в одном месте.
 Остальное проверяют руками (ссылка Google Maps из таблицы) или записывают адрес в no_point.
 Порядок работы — .claude/commands/enrich.md.
 """
@@ -56,16 +56,31 @@ def reliable(number: str, city: str | None, hit: dict) -> bool:
     return south <= float(hit["lat"]) <= north and west <= float(hit["lon"]) <= east
 
 
-def geocode(street: str, city: str | None) -> dict | None:
-    params = {"street": street, "country": "Serbia", "format": "json", "limit": 1, "addressdetails": 1}
+def geocode(street: str, city: str | None) -> list[dict]:
+    """До пяти кандидатов: одного мало, в Белграде бывает несколько улиц с одним именем."""
+    params = {"street": street, "country": "Serbia", "format": "json", "limit": 5, "addressdetails": 1}
     if city in BOUNDS:
         params.update(viewbox=",".join(map(str, BOUNDS[city])), bounded=1)
     req = urllib.request.Request(f"{NOMINATIM}?{urllib.parse.urlencode(params)}", headers={"User-Agent": build.UA})
     try:
-        hits = json.loads(urllib.request.urlopen(req, timeout=20).read())
+        return json.loads(urllib.request.urlopen(req, timeout=20).read())
     except (OSError, ValueError):
-        return None
-    return hits[0] if hits else None
+        return []
+
+
+def judge(number: str, city: str | None, hits: list[dict]) -> tuple[str, dict | None]:
+    """Вердикт по кандидатам: «надежно» — только если тот же дом в городе нашелся в одном месте.
+
+    2 ноя «Jug Bogdanova 8» нашелся в Савском венце, Винче и Лештане — все три в границах Белграда,
+    и первым OpenStreetMap отдал Винчу, а бизнес в центре. Несколько мест — «проверить».
+    """
+    good = [h for h in hits if reliable(number, city, h)]
+    places = {(round(float(h["lat"]), 2), round(float(h["lon"]), 2)) for h in good}  # ~1 км
+    if len(places) == 1:
+        return "надежно", good[0]
+    if good:
+        return f"проверить, таких домов в городе несколько ({len(places)})", good[0]
+    return ("проверить", hits[0]) if hits else ("не нашел", None)
 
 
 def report(todo: list[dict], cities: dict, do_geocode: bool) -> str:
@@ -87,15 +102,14 @@ def report(todo: list[dict], cities: dict, do_geocode: bool) -> str:
         if not do_geocode:
             out.append(f"{line} → искать: {q[0]}")
             continue
-        hit = geocode(q[0], m["city"])
+        verdict, hit = judge(q[1], m["city"], geocode(q[0], m["city"]))
         time.sleep(1.1)  # правила OpenStreetMap: не чаще запроса в секунду
         if not hit:
             out.append(f"{line} → OpenStreetMap не нашел: ссылка Google Maps из таблицы или no_point")
             continue
         a = hit.get("address", {})
-        found = f"{a.get('road', '?')} {a.get('house_number', '?')}"
+        found = f"{a.get('road', '?')} {a.get('house_number', '?')}, {a.get('suburb') or a.get('city_district') or '?'}"
         point = [round(float(hit["lat"]), 7), round(float(hit["lon"]), 7)]
-        verdict = "надежно" if reliable(q[1], m["city"], hit) else "проверить"
         out.append(f"{line} → {verdict}: {found}\n    \"points\": {{{json.dumps(m['address'], ensure_ascii=False)}: {point}}}")
     return "\n".join(out)
 
