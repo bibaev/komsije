@@ -193,6 +193,8 @@ def build(text: str) -> dict:
     warnings: list[str] = []
 
     used: set[str] = set()
+    by_id: dict[str, dict] = {}
+    current: dict | None = None  # бизнес, к которому относятся строки-продолжения
     ov: dict = {}
     skip = ""
 
@@ -246,11 +248,18 @@ def build(text: str) -> dict:
 
         if not name:
             # Строка-продолжение: ещё точки предыдущего бизнеса (VapeMe в Нови-Саде).
-            if businesses:
-                businesses[-1]["locations"].extend(locs)
+            if current:
+                current["locations"].extend(locs)
             continue
 
         pib = nums[0]
+        if pib in by_id:
+            # Один бизнес двумя строками («Cacafe» и «Ca.ca.fe», 2 ноя): одна карточка, новые адреса — к ней.
+            current = by_id[pib]
+            have = {loc["address"] for loc in current["locations"]}
+            current["locations"].extend(loc for loc in locs if loc["address"] not in have)
+            warnings.append(f"«{name}»: тот же номер, что у «{current['name']}», строки склеены в одну карточку")
+            continue
         activity = " ".join(lines(rec.get("activity", "")))
         # В таблице часто юридическое имя («… PR», «d.o.o.»); слой обогащения даёт человеческое.
         name = ov.get("name") or name
@@ -273,6 +282,7 @@ def build(text: str) -> dict:
                       if (u := to_link(k, lines(rec.get(k, ""))[0] if lines(rec.get(k, "")) else ""))},
         }
         businesses.append(b)
+        by_id[pib] = current = b
 
     for b in businesses:
         missing = [l["address"] for l in b["locations"] if l["lat"] is None]

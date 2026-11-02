@@ -102,6 +102,21 @@ def test_row_without_mb_or_pib_is_not_a_business(isolated):
     assert any("«`»" in w for w in warnings)
 
 
+def test_same_number_twice_is_one_card(isolated):
+    # инициатива внесла бизнес дважды («Cacafe» и «Ca.ca.fe», 2 ноя): одна карточка, новый адрес к ней,
+    # и строка-продолжение после дубля относится к нему, а не к соседу выше
+    data, warnings = build.build(sheet(
+        f"Kafa,Kafe,12345678,Ulica 1,Beograd,{gmaps(44.81, 20.46)},,,,",
+        f"Bar,Bar,87654321,Ulica 9,Beograd,{gmaps(44.82, 20.47)},,,,",
+        f"K.a.f.a,Kafe,12345678,Ulica 1,Beograd,{gmaps(44.81, 20.46)},,,,",
+        f",,,Bulevar 2,Novi Sad,{gmaps(45.25, 19.83)},,,,",
+    ))
+    kafa, bar = data["businesses"]
+    assert [loc["address"] for loc in kafa["locations"]] == ["Ulica 1", "Bulevar 2"]
+    assert [loc["address"] for loc in bar["locations"]] == ["Ulica 9"]
+    assert any("склеены" in w for w in warnings)
+
+
 def test_publish_stops_when_a_third_of_businesses_vanish():
     def biz(n):
         return {"businesses": [{"id": str(i)} for i in range(n)]}
