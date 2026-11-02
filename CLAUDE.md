@@ -14,7 +14,7 @@
 - Страница: `site/index.html`, `site/app.js`, `site/style.css`; `site/data.js`, `site/b/` и копии из `brand/` (`icons.svg`, `favicon.svg`, `og.png`) пишет сборка, они вне git, руками не править.
 - Бренд v1 «Улица»: `brand/tokens.yml` (цвета, шрифты, форма), `brand/icons.svg` (пиктограммы категорий), `brand/favicon.svg`, `brand/og.png` (превью ссылки), правила — `brand/style-guide.md`. Новая категория = значок в `icons.svg` в том же духе.
 - Слой обогащения: `data/overrides.json` (по MB или ПИБ), категории: `data/categories.json`. Точка для адреса, у которого ссылка не даёт координат, — `points` в `overrides.json`, ключ — адрес дословно, как в таблице.
-- Подвал (автор, контакт, репозиторий) и адрес сайта для превью — `config.json`.
+- Подвал (контакт, репозиторий), автор инициативы для плашки источника и адрес сайта для превью — `config.json`.
 - Публикация: GitHub Pages, `.github/workflows/pages.yml` — на merge в `main` и вручную (Run workflow). Сборка каждый раз скачивает таблицу, поэтому публикация — это и сверка. PR проверяет `.github/workflows/checks.yml`, он ничего не публикует.
 - Бизнес просит убрать себя — `"hidden": "<причина и дата>"` в `overrides.json`, без личных подробностей: строка видна всем.
 - Проверка: `.venv/bin/pytest -q && .venv/bin/ruff check .`

@@ -301,7 +301,6 @@ def build(text: str) -> dict:
         "initiative": {"name": CONFIG.get("initiative", ""), "url": CONFIG.get("initiative_url") or None,
                        "author": CONFIG.get("initiative_author") or None},
         "repo": CONFIG.get("repo_url") or None,
-        "author": CONFIG.get("author") or None,
         # Источник тайлов — в config.json, а не в app.js: политика OSM требует менять его без правки кода.
         "tiles": CONFIG["tiles"],
         "contact": CONFIG.get("contact_url") or None,
