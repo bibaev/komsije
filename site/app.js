@@ -27,6 +27,7 @@
       places: (n) => `${n} ${plural(n, ["место", "места", "мест"])}`,
       srcLabel: "Откуда список", quote: ["«", "»"],
       srcText: ["Список собирает и проверяет по ПИБ сербская инициатива ", ". Мы только показываем его на карте."],
+      srcBy: ", ее начала ",
       srcSheet: "Таблица инициативы ↗", srcAdd: "Добавить свой бизнес ↗",
       synced: "Сверено с таблицей",
       madeBy: "Карту делает ",
@@ -51,6 +52,7 @@
       places: (n) => `${n} ${plural(n, ["mesto", "mesta", "mesta"])}`,
       srcLabel: "Odakle spisak", quote: ["„", "“"],
       srcText: ["Spisak prikuplja i proverava po PIB-u srpska inicijativa ", ". Mi ga samo prikazujemo na mapi."],
+      srcBy: ", koju je pokrenula ",
       srcSheet: "Tabela inicijative ↗", srcAdd: "Dodaj svoj biznis ↗",
       synced: "Usklađeno sa tabelom",
       madeBy: "Mapu pravi ",
@@ -290,7 +292,11 @@
     $("#source-label").textContent = t().srcLabel;
     const text = $("#source-text"); text.textContent = "";
     const [qo, qc] = t().quote;
-    text.append(textWithLink(t().srcText[0], D.initiative.url, `${qo}${D.initiative.name}${qc}`, t().srcText[1]));
+    text.append(textWithLink(t().srcText[0], D.initiative.url, `${qo}${D.initiative.name}${qc}`));
+    // Кто начал инициативу — по имени: список сделали они, мы только показываем
+    const by = D.initiative.author;
+    if (by) text.append(textWithLink(t().srcBy, by.url, by.name));
+    text.append(document.createTextNode(t().srcText[1]));
     const links = $("#source-links"); links.textContent = "";
     [[D.source, t().srcSheet], [D.add_url, t().srcAdd]].forEach(([href, label]) => { const a = link(href, label); if (a) links.append(a); });
     const when = new Date(D.synced_at || D.generated_at);

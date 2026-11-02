@@ -298,7 +298,8 @@ def build(text: str) -> dict:
         "generated_at": changed_at,
         "source": f"{sheet}/htmlview",
         "add_url": f"{sheet}/edit#gid={CONFIG['pending_gid']}" if CONFIG.get("pending_gid") else None,
-        "initiative": {"name": CONFIG.get("initiative", ""), "url": CONFIG.get("initiative_url") or None},
+        "initiative": {"name": CONFIG.get("initiative", ""), "url": CONFIG.get("initiative_url") or None,
+                       "author": CONFIG.get("initiative_author") or None},
         "repo": CONFIG.get("repo_url") or None,
         "author": CONFIG.get("author") or None,
         # Источник тайлов — в config.json, а не в app.js: политика OSM требует менять его без правки кода.
