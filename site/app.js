@@ -185,10 +185,19 @@
   }
   const pictogram = (cat) => glyph(D.categories[cat] ? cat : "drugoe");
   // Событие в счётчик: только действие и ключ бизнеса, ничего о посетителе. Нет счётчика — тишина.
-  function track(path, title) {
-    try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path, title: title || path, event: true }); }
-    catch (e) { /* счётчик не должен ломать страницу */ }
+  // count.js грузится async и обычно позже app.js: событие до его загрузки ждет в очереди,
+  // иначе пропадал link/ при входе по ссылке «Поделиться». Счетчик заблокирован — очередь просто не уходит.
+  const gcQueue = [];
+  const gcReady = () => !!(window.goatcounter && window.goatcounter.count);
+  function gcSend(v) {
+    try { window.goatcounter.count(v); } catch (e) { /* счётчик не должен ломать страницу */ }
   }
+  function track(path, title) {
+    const v = { path, title: title || path, event: true };
+    if (gcReady()) gcSend(v); else gcQueue.push(v);
+  }
+  const gcScript = document.querySelector("script[data-goatcounter]");
+  if (gcScript) gcScript.addEventListener("load", () => { while (gcReady() && gcQueue.length) gcSend(gcQueue.shift()); });
 
   // --- карта -------------------------------------------------------------------
   const map = L.map("map", { zoomControl: false, scrollWheelZoom: true }).setView([45.03, 20.15], 9);
@@ -296,7 +305,11 @@
     if (by) text.append(textWithLink(t().srcBy, by.url, by.name));
     text.append(document.createTextNode(t().srcText[1]));
     const links = $("#source-links"); links.textContent = "";
-    [[D.source, t().srcSheet], [D.add_url, t().srcAdd]].forEach(([href, label]) => { const a = link(href, label); if (a) links.append(a); });
+    // sheet — открыли таблицу, add — пошли добавлять бизнес: сколько заявок инициативе пришло через карту
+    [[D.source, t().srcSheet, "sheet"], [D.add_url, t().srcAdd, "add"]].forEach(([href, label, ev]) => {
+      const a = link(href, label);
+      if (a) { a.addEventListener("click", () => track(ev)); links.append(a); }
+    });
     const when = new Date(D.synced_at || D.generated_at);
     $("#synced").textContent = `${t().synced}: ${when.toLocaleString(t().locale, { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" })}`;
   }
@@ -396,7 +409,8 @@
       }
       if (b.places_list) {
         const row = el("li", "loc"); const a = link(b.places_list, `${t().placesList} ↗`, "places");
-        if (a) { row.append(a); ul.append(row); }
+        // Список точек на Google Maps — тот же «Маршрут» для бизнеса с несколькими адресами
+        if (a) { a.addEventListener("click", () => track(`route/${b.key}`, b.name)); row.append(a); ul.append(row); }
       }
       li.append(ul);
     }
@@ -526,5 +540,8 @@
 
   renderStatic();
   update({ fit: true });
+  // Язык, с которым открыли сайт (по браузеру, ссылке или прошлому визиту): одно событие на визит,
+  // по нему видно, сколько сербов. lang/ — только ручное переключение.
+  track(`ui/${state.lang}`);
   if (deep) select(deep.id, { scroll: true, via: "link" });
 })();
