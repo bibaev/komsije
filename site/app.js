@@ -195,6 +195,8 @@
   L.control.zoom({ position: "topright" }).addTo(map);
   // Тайлы и подпись к ним — из config.json (D.tiles); приглушение и тёмная тема — CSS-фильтром на .leaflet-tile-pane.
   L.tileLayer(D.tiles.url, { maxZoom: D.tiles.max_zoom, attribution: D.tiles.attribution }).addTo(map);
+  // Подпись Leaflet без флажка из префикса по умолчанию: символов на сайте нет (CLAUDE.md, «Границы»)
+  map.attributionControl.setPrefix('<a href="https://leafletjs.com">Leaflet</a>');
 
   const layer = L.layerGroup().addTo(map);
   const markers = new Map(); // id -> [{marker, loc}]
