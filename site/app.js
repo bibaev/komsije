@@ -30,7 +30,6 @@
       srcBy: ", ее начала ",
       srcSheet: "Таблица инициативы ↗", srcAdd: "Добавить свой бизнес ↗",
       synced: "Сверено с таблицей",
-      madeBy: "Карту делает ",
       report: ["Ошибка на карте? ", "Сообщи о ней на GitHub"],
       contact: "Вопрос или идея? Пиши в Telegram: ",
       code: ["Код открыт, правку можно предложить на ", "GitHub"],
@@ -55,7 +54,6 @@
       srcBy: ", koju je pokrenula ",
       srcSheet: "Tabela inicijative ↗", srcAdd: "Dodaj svoj biznis ↗",
       synced: "Usklađeno sa tabelom",
-      madeBy: "Mapu pravi ",
       report: ["Greška na mapi? ", "Prijavi je na GitHubu"],
       contact: "Pitanje ili ideja? Piši mi na Telegramu: ",
       code: ["Kod je otvoren, izmenu možeš da predložiš na ", "GitHubu"],
@@ -302,7 +300,7 @@
     const when = new Date(D.synced_at || D.generated_at);
     $("#synced").textContent = `${t().synced}: ${when.toLocaleString(t().locale, { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" })}`;
   }
-  // Подвал: кто делает карту и как с ним связаться. Всё из config.json, чтобы форк подписал своё.
+  // Подвал: куда сообщить об ошибке, как связаться, где код. Всё из config.json, чтобы форк подписал своё.
   function handle(url) {
     const m = /^https:\/\/t\.me\/(\w+)\/?$/i.exec(url);
     return m ? `@${m[1]}` : url.replace(/^https?:\/\//, "");
@@ -310,8 +308,6 @@
   function renderFooter() {
     const foot = $("#foot"); foot.textContent = "";
     const line = (node) => { const p = el("p"); p.append(node); foot.append(p); };
-    const author = D.author && (D.author[state.lang] || D.author.ru);
-    if (author) line(document.createTextNode(`${t().madeBy}${author}`));
     // Сразу форма «Ошибка на карте» (.github/ISSUE_TEMPLATE/oshibka.yml), без экрана выбора шаблона
     if (D.repo) line(textWithLink(t().report[0], `${D.repo}/issues/new?template=oshibka.yml`, t().report[1]));
     if (D.contact) line(textWithLink(t().contact, D.contact, handle(D.contact)));
