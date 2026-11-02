@@ -332,7 +332,8 @@
     for (const c of cityIds) {
       const n = byQ.filter((b) => inCity(b, c) && inCat(b, state.cat)).length;
       const label = c === "all" ? t().all : c === "online" ? t().online : cityLabel(c);
-      cityBox.append(button(label, c === "all" ? null : n, state.city === c, () => { state.city = c; store.set("komsije-city", c); track(`city/${c}`); update({ fit: true }); }));
+      // У «Все» тоже число: сумма по городам его не дает (бизнес бывает в двух городах), а без него неясно, сколько всего
+      cityBox.append(button(label, n, state.city === c, () => { state.city = c; store.set("komsije-city", c); track(`city/${c}`); update({ fit: true }); }));
     }
     const catBox = $("#cats"); catBox.textContent = "";
     const pool = byQ.filter((b) => inCity(b, state.city));
