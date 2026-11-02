@@ -41,6 +41,7 @@
   "67769643": {"categories": ["kofe"], "description_ru": "Кафе",
                "tags": {"ru": ["кафе"], "sr": ["kafe"]}},
   "67215052": {"categories": ["kofe"], "description_ru": "Кофейные автоматы самообслуживания",
+               "no_point": ["Mix Markt, Beograđanka", "Pekara Vanja"],
                "points": {"Sportska dvorana prof. dr Branislav Pokrajac, ulaz A": [44.7634072, 20.4726519],
                           "Mix Markt, Sarajevska 70": [44.8008268, 20.4515571],
                           "Fakultet organizacionih studija „Eduka“": [44.8129041, 20.4674469],

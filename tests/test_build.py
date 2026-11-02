@@ -4,6 +4,7 @@ import json
 import pytest
 
 from komsije import build
+from komsije import todo as todo_mod
 
 HEADER = (
     ',"Važno! Obavezno navedite matični broj ili PIB firme."\n'
@@ -115,6 +116,40 @@ def test_same_number_twice_is_one_card(isolated):
     assert [loc["address"] for loc in kafa["locations"]] == ["Ulica 1", "Bulevar 2"]
     assert [loc["address"] for loc in bar["locations"]] == ["Ulica 9"]
     assert any("склеены" in w for w in warnings)
+
+
+def test_todo_lists_what_still_needs_hands(isolated, monkeypatch):
+    # список дел: бизнес без записи в обогащении и адрес без точки; no_point — искали и не нашли, из списка уходит
+    monkeypatch.setattr(build, "OVERRIDES", {"12345678": {"no_point": ["B 2"]}})
+    _, warnings, todo = build.assemble(sheet(
+        '"Mreža",Kafe,12345678,"A 1\nB 2",Beograd,https://www.google.com/maps/placelists/list/abc,,,,',
+        f'Novi,Bar,87654321,Ulica 9,Beograd,"{gmaps(44.82, 20.47)}",,,,',  # в ссылке запятые: в CSV — в кавычках
+    ))
+    assert [(t["id"], t["curated"], [m["address"] for m in t["missing"]]) for t in todo] == [
+        ("12345678", True, ["A 1"]), ("87654321", False, [])]
+    assert not any("B 2" in w for w in warnings)
+
+
+@pytest.mark.parametrize(("address", "query"), [
+    ("Cerska 115 stan PP (zakazivanje samo putem instagrama)", ("Cerska 115", "115")),
+    ("Beograd, Dalmatinska 72", ("Dalmatinska 72", "72")),
+    ("Kраљевића Марка 5, Београд 11050, Сербия", ("Kраљевића Марка 5", "5")),
+    ("Maršala Birjuzova 2-4", ("Maršala Birjuzova 2", "2")),
+    ("Dimitrija Tucovića 2a, 8 (moze i online)", ("Dimitrija Tucovića 2a", "2a")),
+    ("Bulevar Kralja Aleksandra", None),
+    ("Mix Markt, Beograđanka", None),
+])
+def test_street_query_keeps_street_and_house_number(address, query):
+    assert todo_mod.street_query(address) == query
+
+
+def test_geocode_hit_is_reliable_only_with_same_house_inside_city():
+    hit = {"lat": "44.8143", "lon": "20.4591", "address": {"house_number": "2а"}}
+    assert todo_mod.reliable("2a", "beograd", hit)  # кириллическая «а» = латинская
+    assert not todo_mod.reliable("4", "beograd", hit)
+    assert not todo_mod.reliable("2a", "beograd", {**hit, "lat": "44.49"})  # тот же адрес в пригороде
+    assert not todo_mod.reliable("2a", None, hit)
+    assert todo_mod.reliable("2", "beograd", {**hit, "address": {"house_number": "2-4"}})  # дом-диапазон
 
 
 def test_publish_stops_when_a_third_of_businesses_vanish():

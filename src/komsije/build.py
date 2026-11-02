@@ -186,7 +186,13 @@ def cities_of(raw: str) -> list[tuple[str, dict]]:
     return list(out.items())
 
 
-def build(text: str) -> dict:
+def build(text: str) -> tuple[dict, list[str]]:
+    data, warnings, _ = assemble(text)
+    return data, warnings
+
+
+def assemble(text: str) -> tuple[dict, list[str], list[dict]]:
+    """Данные сайта, предупреждения и список дел для обогащения (его печатает komsije.todo)."""
     cache = json.loads(CACHE_PATH.read_text(encoding="utf-8")) if CACHE_PATH.exists() else {}
     businesses: list[dict] = []
     cities: dict[str, dict] = {}
@@ -271,6 +277,7 @@ def build(text: str) -> dict:
             "key": f"{slug}-{pib}",
             "_curated": bool(ov),
             "_points": set(points),
+            "_no_point": set(ov.get("no_point", [])),
             "name": name,
             "online": not city_ids,
             "categories": ov.get("categories") or guess_categories(activity),
@@ -284,17 +291,25 @@ def build(text: str) -> dict:
         businesses.append(b)
         by_id[pib] = current = b
 
+    todo: list[dict] = []
     for b in businesses:
-        missing = [l["address"] for l in b["locations"] if l["lat"] is None]
+        no_point = b.pop("_no_point")  # искали и не нашли: из списка дел уходит, в предупреждения не попадает
+        missing = [loc for loc in b["locations"] if loc["lat"] is None and loc["address"] not in no_point]
         if missing:
-            warnings.append(f"{b['name']}: без точки на карте — {', '.join(missing)}")
+            warnings.append(f"{b['name']}: без точки на карте — {', '.join(loc['address'] for loc in missing)}")
         # Точка из overrides.json ищется по адресу дословно: адрес в таблице поправили — точка пропала.
-        stale = b.pop("_points") - {l["address"] for l in b["locations"]}
+        stale = (b.pop("_points") | no_point) - {loc["address"] for loc in b["locations"]}
         if stale:
-            warnings.append(f"{b['name']}: в overrides.json точка для адреса, которого нет в таблице — "
+            warnings.append(f"{b['name']}: в overrides.json адрес, которого нет в таблице — "
                             f"{', '.join(sorted(stale))}")
-        if not b.pop("_curated"):
+        curated = b.pop("_curated")
+        if not curated:
             warnings.append(f"{b['name']}: нет в overrides.json, теги угаданы по описанию")
+        if missing or not curated:
+            todo.append({"id": b["id"], "name": b["name"], "curated": curated,
+                         "activity": b["description"]["sr"], "categories": b["categories"],
+                         "links": sorted(b["links"]),
+                         "missing": [{"address": loc["address"], "city": loc["city"]} for loc in missing]})
 
     # В кэше остаются только ссылки из текущей таблицы: удалённые строки не копятся.
     cache = {k: v for k, v in cache.items() if k in used}
@@ -322,7 +337,7 @@ def build(text: str) -> dict:
         "categories": {k: {x: v[x] for x in ("ru", "sr")} for k, v in CATEGORIES.items()},
         "cities": cities,
         "businesses": businesses,
-    }, warnings
+    }, warnings, todo
 
 
 def read_data() -> dict | None:
