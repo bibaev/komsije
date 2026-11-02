@@ -61,6 +61,14 @@ html[lang="ru"] .logo .lat, html[lang^="sr"] .logo .cyr { display: none; }
 .lang button[aria-pressed="true"] { background: var(--cta); color: var(--cta-text); }
 h1 { margin: 8px 0 10px; font: 700 clamp(42px, 5.2vw, 58px)/1.02 var(--f-display); letter-spacing: -.005em; }
 .lede { margin: 0; color: var(--muted); font-size: 16.5px; max-width: 46ch; text-wrap: pretty; }
+/* «Поделиться картой» — пересылка всей карты одним нажатием, рядом с подзаголовком */
+.share-map {
+  display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; height: 38px; padding: 0 16px;
+  border: 1px solid var(--line-strong); border-radius: var(--r-card); background: var(--surface);
+  color: var(--text); font: 700 14px var(--f-label); cursor: pointer;
+}
+.share-map:hover { border-color: var(--text); }
+.share-map svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
 /* --- «Откуда список»: чья таблица, как попасть на карту, когда сверено ---------- */
 .source { margin-top: 18px; padding: 12px 14px 12px 16px; border-radius: var(--r-card); background: var(--surface);

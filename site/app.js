@@ -20,7 +20,7 @@
       near: "Рядом со мной", locating: "Ищу, где ты…",
       geoFail: "Не получилось определить, где ты. Разреши доступ к геолокации и попробуй еще раз.",
       sorted: "Сначала ближайшие к тебе", random: "В случайном порядке, чтобы никто не был первым всегда",
-      share: "Поделиться", copied: "Ссылка скопирована", copyThis: "Скопируй ссылку:",
+      share: "Поделиться", shareMap: "Поделиться картой", copied: "Ссылка скопирована", copyThis: "Скопируй ссылку:",
       route: "Маршрут", site: "Сайт", onlineShop: "Работает онлайн, заказ через соцсети или сайт",
       noPin: "нет на карте", placesList: "Все точки на Google Maps", more: (n) => `еще ${n}`,
       empty: "Ничего не нашлось.", reset: "Сбросить фильтры",
@@ -44,7 +44,7 @@
       near: "Blizu mene", locating: "Tražim lokaciju…",
       geoFail: "Nije uspelo određivanje lokacije. Dozvoli pristup lokaciji i pokušaj ponovo.",
       sorted: "Prvo najbliži tebi", random: "Nasumičnim redosledom, da niko nije uvek prvi",
-      share: "Podeli", copied: "Link je kopiran", copyThis: "Kopiraj link:",
+      share: "Podeli", shareMap: "Podeli mapu", copied: "Link je kopiran", copyThis: "Kopiraj link:",
       route: "Kako stići", site: "Sajt", onlineShop: "Radi online, porudžbine preko mreža ili sajta",
       noPin: "nije na mapi", placesList: "Sve lokacije na Google Maps", more: (n) => `još ${n}`,
       empty: "Nema rezultata.", reset: "Poništi filtere",
@@ -280,6 +280,7 @@
     document.title = `${t().brand} · ${t().title}`;
     $("#title").textContent = t().title;
     $("#lede").textContent = t().lede;
+    $("#share-map-label").textContent = t().shareMap;
     $("#q").placeholder = t().search;
     renderSource();
     renderFooter();
@@ -451,16 +452,24 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => n.classList.remove("show"), ms);
   }
-  async function share(b) {
-    const url = shareUrl(b);
-    track(`share/${b.key}`, b.name);
+  // На телефоне — системное «Поделиться», на компьютере — ссылка в буфер
+  async function shareLink(url, title, text) {
     const touch = window.matchMedia("(pointer: coarse)").matches;
     if (touch && navigator.share) {
-      try { await navigator.share({ title: b.name, text: `${b.name}: ${b.description[state.lang]}`, url }); return; }
+      try { await navigator.share({ title, text, url }); return; }
       catch (e) { if (e && e.name === "AbortError") return; }
     }
     try { await navigator.clipboard.writeText(url); toast(t().copied); }
     catch (e) { toast(`${t().copyThis} ${url}`, 8000); }
+  }
+  function share(b) {
+    track(`share/${b.key}`, b.name);
+    return shareLink(shareUrl(b), b.name, `${b.name}: ${b.description[state.lang]}`);
+  }
+  // Вся карта: адрес без параметров, превью ссылки у главной по-сербски
+  function shareMap() {
+    track("share/map");
+    return shareLink(location.href.split(/[?#]/)[0], `${t().brand} · ${t().title}`, t().title);
   }
 
   function visible() {
@@ -519,6 +528,7 @@
     state.lang = bt.dataset.lang; store.set("komsije-lang", state.lang); track(`lang/${state.lang}`);
     map.closePopup(); renderStatic(); update();
   }));
+  $("#share-map").addEventListener("click", shareMap);
   $("#near").addEventListener("click", () => {
     const status = $("#status");
     if (state.me) {
