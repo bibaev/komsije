@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Добавить бизнес или исправить адрес / Dodaj biznis ili ispravi adresu
+    url: https://docs.google.com/spreadsheets/d/1IBRo4Frwh6ph5q1Bykk8JeNIzJwntW5JVyS1YGQXJCE/edit#gid=418527537
+    about: Список ведёт инициатива «Zajedno uz ruske biznise», сайт только читает проверенную вкладку / Spisak vodi inicijativa, sajt samo čita proverene unose
+  - name: Написать автору в Telegram / Piši autoru na Telegramu
+    url: https://t.me/v_bibaev
+    about: Если нет аккаунта на GitHub / Ako nemaš GitHub nalog

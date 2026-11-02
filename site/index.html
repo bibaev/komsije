@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Комшије · Зайди к соседям</title>
+<meta name="description" content="Кафе, салоны, книжные и мастерские в Белграде и Нови-Саде, у которых были счета в Alta banka. Список с тегами и карта: найди, что рядом.">
+<meta property="og:site_name" content="Komšije">
+<meta property="og:title" content="Зайди к соседям">
+<meta property="og:description" content="Бизнесы в Белграде и Нови-Саде, чьи деньги застряли в Alta banka. Найди, что рядом, и зайди.">
+<meta property="og:type" content="website">
+<!-- Превью в мессенджерах: полный адрес обязателен; тот же адрес — site_url в config.json -->
+<meta property="og:url" content="https://komsije.cherdak.rs/">
+<meta property="og:image" content="https://komsije.cherdak.rs/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#E6E9EC" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F151C" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Шрифты — brand/tokens.yml, fonts.*.google (сверяет tests/test_brand.py) -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&family=PT+Sans:wght@400;700&family=PT+Sans+Caption:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <div class="panel">
+    <header class="intro">
+      <div class="topline">
+        <span class="logo" role="img" aria-label="Komšije"><span class="cyr" lang="sr-Cyrl">Комшије</span><span class="lat" lang="sr-Latn">Komšije</span></span>
+        <div class="lang" role="group" aria-label="Язык / Jezik">
+          <button type="button" data-lang="sr">SR</button>
+          <button type="button" data-lang="ru">RU</button>
+        </div>
+        <p class="eyebrow" id="eyebrow"></p>
+      </div>
+      <h1 id="title">Зайди к соседям</h1>
+      <p class="lede" id="lede">Здесь бизнесы, чьи деньги застряли в Alta banka, а аренда и зарплаты ждать не могут. Среди них могут оказаться и твои соседи: кофейня, парикмахер, книжный за углом. Зайти к ним сейчас значит больше, чем обычно.</p>
+      <aside class="source" aria-labelledby="source-label">
+        <p class="source-label" id="source-label">Откуда список</p>
+        <p class="source-text" id="source-text"></p>
+        <p class="source-links" id="source-links"></p>
+        <p class="source-sync" id="synced"></p>
+      </aside>
+    </header>
+
+    <section class="controls" aria-label="Фильтры">
+      <label class="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
+        <input id="q" type="search" autocomplete="off" spellcheck="false">
+      </label>
+      <div class="row">
+        <div class="seg" id="cities" role="group"></div>
+        <button type="button" class="near" id="near">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+          <span id="near-label"></span>
+        </button>
+      </div>
+      <div class="chips" id="cats" role="group"></div>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </section>
+
+    <p class="order" id="order"></p>
+    <ol class="list" id="list"></ol>
+
+    <footer class="foot" id="foot"></footer>
+  </div>
+
+  <div class="mapwrap"><div id="map" aria-label="Карта"></div></div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<noscript><p class="noscript">Список работает с JavaScript. Без него: <a href="https://docs.google.com/spreadsheets/d/1IBRo4Frwh6ph5q1Bykk8JeNIzJwntW5JVyS1YGQXJCE/htmlview">открытая таблица</a>.</p></noscript>
+
+<!-- Счётчик GoatCounter: без кук и без данных о посетителе (CLAUDE.md, инвариант 6). Путь — без параметров,
+     чтобы ?b=… не плодил страницы; что открыли — события из app.js. С localhost не считает. -->
+<script>window.goatcounter = { path: function () { return location.pathname || "/"; } };</script>
+<script data-goatcounter="https://cherdak.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

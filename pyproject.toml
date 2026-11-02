@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "komsije"
+version = "0.1.0"
+description = "Список и карта бизнесов из проверенной таблицы инициативы «Zajedno uz ruske biznise»"
+requires-python = ">=3.12"
+license = "MIT"
+# Сборка — только stdlib (инвариант 2 в CLAUDE.md): контрибьютору нечего ставить, чтобы собрать сайт.
+dependencies = []
+
+[project.optional-dependencies]
+# pyyaml — только тестам: test_brand сверяет style.css с brand/tokens.yml. Сборке он не нужен.
+dev = ["pytest>=7.0", "ruff>=0.1.0", "pyyaml>=6.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"

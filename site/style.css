@@ -1,0 +1,209 @@
+/* Komšije v1 «Улица». Значения — brand/tokens.yml (совпадение сверяет tests/test_brand.py), правила — brand/style-guide.md. */
+:root {
+  --bg: #E6E9EC; --surface: #FFFFFF; --line: #CFD5DB; --line-strong: #98A2AD;
+  --text: #17202A; --muted: #55606C; --accent: #1D4F9B; --cta: #1D4F9B; --cta-text: #FFFFFF;
+  --plate: #1D4F9B; --plate-text: #FFFFFF; --plate-rim: #FFFFFF; --here: #D0342C;
+  --tiles: grayscale(.85) brightness(1.05) contrast(.95);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F151C; --surface: #17212B; --line: #263340; --line-strong: #3B4B5A;
+    --text: #E8EDF2; --muted: #A2B2C1; --accent: #8DB4FF; --cta: #2459AB; --cta-text: #FFFFFF;
+    --plate: #2459AB; --plate-text: #FFFFFF; --plate-rim: #FFFFFF; --here: #FF6A5C;
+    --tiles: invert(1) hue-rotate(180deg) grayscale(.9) brightness(.7);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F151C; --surface: #17212B; --line: #263340; --line-strong: #3B4B5A;
+  --text: #E8EDF2; --muted: #A2B2C1; --accent: #8DB4FF; --cta: #2459AB; --cta-text: #FFFFFF;
+  --plate: #2459AB; --plate-text: #FFFFFF; --plate-rim: #FFFFFF; --here: #FF6A5C;
+  --tiles: invert(1) hue-rotate(180deg) grayscale(.9) brightness(.7);
+  color-scheme: dark;
+}
+:root {
+  --f-display: "PT Sans Narrow", "Arial Narrow", sans-serif;
+  --f-body: "PT Sans", system-ui, sans-serif;
+  --f-label: "PT Sans Caption", system-ui, sans-serif;
+  --r-card: 4px; --r-plate: 5px;
+  --panel-w: min(520px, 44vw);
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 400 16px/1.5 var(--f-body); -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* --- раскладка ------------------------------------------------------------ */
+.app { display: grid; grid-template-columns: var(--panel-w) minmax(0, 1fr); min-height: 100vh; }
+.panel { padding: 32px 32px 48px; min-width: 0; }
+.mapwrap { position: sticky; top: 0; height: 100vh; border-left: 1px solid var(--line); }
+#map { height: 100%; background: var(--bg); }
+
+/* --- табличка: логотип, адрес, значок категории, точка на карте ---------------- */
+.logo, .plate {
+  display: inline-flex; align-items: center; background: var(--plate); color: var(--plate-text);
+  border-radius: var(--r-plate); box-shadow: inset 0 0 0 2px var(--plate), inset 0 0 0 3.5px var(--plate-rim);
+  font-family: var(--f-display); font-weight: 700; line-height: 1.15;
+}
+.logo { padding: 6px 15px 7px; font-size: 27px; letter-spacing: .01em; }
+html[lang="ru"] .logo .lat, html[lang^="sr"] .logo .cyr { display: none; }
+.plate { padding: 5px 11px 6px; font-size: 16px; letter-spacing: .01em; overflow-wrap: anywhere; }
+
+/* --- шапка ---------------------------------------------------------------- */
+.topline { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.eyebrow { flex-basis: 100%; margin: 18px 0 0; font: 700 12px/1.4 var(--f-label); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.lang { display: inline-flex; border: 1px solid var(--line); border-radius: var(--r-card); padding: 2px; background: var(--surface); }
+.lang button { border: 0; background: none; padding: 3px 10px; border-radius: 3px; font: 700 12px/1.5 var(--f-label); color: var(--muted); cursor: pointer; }
+.lang button[aria-pressed="true"] { background: var(--cta); color: var(--cta-text); }
+h1 { margin: 8px 0 10px; font: 700 clamp(42px, 5.2vw, 58px)/1.02 var(--f-display); letter-spacing: -.005em; }
+.lede { margin: 0; color: var(--muted); font-size: 16.5px; max-width: 46ch; text-wrap: pretty; }
+
+/* --- «Откуда список»: чья таблица, как попасть на карту, когда сверено ---------- */
+.source { margin-top: 18px; padding: 12px 14px 12px 16px; border-radius: var(--r-card); background: var(--surface);
+  border: 1px solid var(--line); border-left: 4px solid var(--plate); }
+.source p { margin: 0; }
+.source-label { font: 700 12px/1.4 var(--f-label); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.source-text { margin-top: 4px !important; font-size: 15px; line-height: 1.45; }
+.source-text a { font-weight: 700; color: var(--accent); text-decoration: none; }
+.source-text a:hover, .source-links a:hover { text-decoration: underline; }
+.source-links { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 8px !important; }
+.source-links a { font: 700 14px var(--f-label); color: var(--accent); text-decoration: none; }
+.source-sync { margin-top: 8px !important; font: 400 13px var(--f-label); color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* --- фильтры -------------------------------------------------------------- */
+.controls { margin-top: 24px; display: grid; gap: 12px; }
+.search { position: relative; display: block; }
+.search svg { position: absolute; left: 14px; top: 50%; width: 18px; height: 18px; transform: translateY(-50%); fill: none; stroke: var(--muted); stroke-width: 2; stroke-linecap: round; }
+.search input {
+  width: 100%; height: 46px; padding: 0 14px 0 42px; border: 1px solid var(--line); border-radius: var(--r-card);
+  background: var(--surface); color: var(--text); font: 400 16px var(--f-body);
+}
+.search input::placeholder { color: var(--muted); }
+.search input:focus { outline: none; border-color: var(--plate); box-shadow: 0 0 0 1px var(--plate); }
+.row { display: flex; gap: 8px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.seg { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+.seg button { border: 0; background: none; padding: 6px 11px; border-radius: var(--r-card); font: 400 16px/1.3 var(--f-label); color: var(--muted); cursor: pointer; white-space: nowrap; }
+.seg button[aria-pressed="true"] { background: var(--cta); color: var(--cta-text); }
+.seg .n, .chip .n { opacity: .65; margin-left: 4px; font-variant-numeric: tabular-nums; }
+.near {
+  display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 13px; border-radius: var(--r-card);
+  border: 1px solid var(--line-strong); background: var(--surface); font: 400 15px var(--f-label); cursor: pointer;
+}
+.near svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; }
+.near[aria-pressed="true"] { background: var(--cta); border-color: var(--cta); color: var(--cta-text); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 11px; border-radius: var(--r-card);
+  border: 1px solid var(--line); background: var(--surface); color: var(--text); font: 400 15px var(--f-label); cursor: pointer;
+}
+.chip .ico { width: 17px; height: 17px; color: var(--accent); }
+.chip[aria-pressed="true"] { background: var(--cta); border-color: var(--cta); color: var(--cta-text); }
+.chip[aria-pressed="true"] .ico { color: var(--cta-text); }
+.ico { flex: none; fill: currentColor; }
+.status { margin: 0; font-size: 14px; color: var(--muted); }
+.status:empty { display: none; }
+
+/* --- карточки ------------------------------------------------------------- */
+.order { margin: 22px 0 0; font: 700 12px/1.4 var(--f-label); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.order:empty { display: none; }
+.list { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 10px; }
+.card {
+  position: relative; padding: 16px 16px 14px; border-radius: var(--r-card); background: var(--surface);
+  border: 1px solid var(--line); box-shadow: 0 1px 0 rgba(0, 0, 0, .06); cursor: pointer; scroll-margin: 16px;
+}
+.card:hover { border-color: var(--line-strong); }
+.card.is-active { border-color: var(--plate); box-shadow: 0 0 0 1px var(--plate); }
+.card-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.cats { display: flex; flex-wrap: wrap; gap: 6px 12px; }
+.cat { display: inline-flex; align-items: center; gap: 6px; font: 700 12px/1 var(--f-label); text-transform: uppercase; letter-spacing: .06em; }
+.cat .ico { width: 20px; height: 20px; padding: 3px; border-radius: 3px; background: var(--plate); color: var(--plate-text);
+  box-shadow: inset 0 0 0 1px var(--plate), inset 0 0 0 2px var(--plate-rim); }
+.dist { font: 700 13px var(--f-label); color: var(--accent); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.name { margin: 10px 0 2px; font: 700 27px/1.15 var(--f-display); letter-spacing: -.005em; }
+.desc { margin: 0; color: var(--muted); font-size: 15px; text-wrap: pretty; }
+.tags { list-style: none; display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 8px 0 0; padding: 0; font: 700 13px/1.4 var(--f-label); }
+.tags li::before { content: "#"; opacity: .45; }
+.locs { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 8px; }
+.loc { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.loc .where { min-width: 0; display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; }
+.loc .city, .loc .nopin { font-size: 13px; color: var(--muted); }
+.loc a, .more, .places { flex: none; font: 700 14px var(--f-label); text-decoration: none; color: var(--accent); white-space: nowrap; }
+.loc a:hover, .places:hover { text-decoration: underline; }
+.more { border: 0; background: none; padding: 0; cursor: pointer; text-align: left; }
+.online { margin: 12px 0 0; font-size: 14px; color: var(--muted); }
+.links { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 14px; }
+.links .lnk {
+  display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: var(--r-card);
+  background: var(--bg); color: var(--accent); text-decoration: none;
+}
+.links .lnk .ico { width: 19px; height: 19px; }
+.links .lnk:hover { background: color-mix(in srgb, var(--bg), var(--text) 8%); }
+.links .share {
+  margin-left: auto; height: 32px; padding: 0 12px; border-radius: var(--r-card); border: 1px solid var(--line-strong);
+  background: var(--surface); font: 700 13.5px var(--f-label); cursor: pointer;
+}
+.links .share:hover { border-color: var(--text); }
+.empty { padding: 28px 16px; text-align: center; color: var(--muted); border: 1px dashed var(--line-strong); border-radius: var(--r-card); }
+.empty button { margin-top: 8px; border: 0; background: none; color: var(--accent); font: 700 15px var(--f-label); cursor: pointer; }
+
+/* --- подвал --------------------------------------------------------------- */
+.foot { margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+.foot p { margin: 0 0 6px; }
+.foot a { font-weight: 700; color: var(--accent); }
+
+/* --- карта: точка — табличка со значком категории ----------------------------- */
+.pin-wrap { background: none; border: 0; }
+.pin {
+  display: grid; place-items: center; width: 26px; height: 26px; margin: -5px; border-radius: 4px;
+  background: var(--plate); color: var(--plate-text);
+  box-shadow: inset 0 0 0 1.5px var(--plate), inset 0 0 0 3px var(--plate-rim), 0 1px 4px rgba(0, 0, 0, .4);
+  transition: background-color .15s ease, color .15s ease, box-shadow .15s ease;
+}
+.pin .ico { width: 16px; height: 16px; }
+/* Размер у всех точек один и тот же; наведение и выбор видны цветом, а не увеличением */
+.pin.is-hover { box-shadow: inset 0 0 0 1.5px var(--plate), inset 0 0 0 3px var(--plate-rim), 0 0 0 3px color-mix(in srgb, var(--plate) 35%, transparent); }
+.pin.is-active { background: var(--plate-rim); color: var(--plate);
+  box-shadow: inset 0 0 0 2.5px var(--plate), 0 0 0 4px color-mix(in srgb, var(--plate) 40%, transparent), 0 1px 4px rgba(0, 0, 0, .4); }
+.me { display: block; width: 16px; height: 16px; border-radius: 50%; background: var(--here); border: 3px solid #fff;
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--here) 25%, transparent); }
+.leaflet-container { font-family: var(--f-body); }
+.leaflet-tile-pane { filter: var(--tiles); }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--surface); color: var(--text); box-shadow: 0 6px 24px rgba(0, 0, 0, .18); }
+.leaflet-popup-content-wrapper { border-radius: var(--r-card); }
+.leaflet-popup-content { margin: 12px 14px; font-size: 14px; line-height: 1.4; }
+.pop b { display: block; font: 700 18px var(--f-display); }
+.pop span { display: block; color: var(--muted); }
+.pop a { display: inline-block; margin-top: 6px; font: 700 14px var(--f-label); color: var(--accent); text-decoration: none; }
+.leaflet-container a.leaflet-popup-close-button { color: var(--muted); }
+
+/* --- всплывающее «ссылка скопирована» ------------------------------------------ */
+.toast {
+  position: fixed; left: 50%; bottom: 20px; z-index: 1000; max-width: min(92vw, 520px);
+  transform: translate(-50%, 12px); opacity: 0; pointer-events: none;
+  padding: 10px 16px; border-radius: var(--r-card); background: var(--plate); color: var(--plate-text);
+  box-shadow: inset 0 0 0 2px var(--plate), inset 0 0 0 3.5px var(--plate-rim), 0 8px 28px rgba(0, 0, 0, .25);
+  font: 700 15px var(--f-label); overflow-wrap: anywhere; transition: opacity .18s ease, transform .18s ease;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; user-select: all; }
+.noscript { padding: 16px; }
+
+/* --- телефон: шапка, фильтры, карта прилипает сверху, под ней список ------ */
+@media (max-width: 900px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .panel { display: contents; }
+  .intro { order: 1; padding: 18px 16px 0; }
+  .controls { order: 2; margin: 0; padding: 18px 16px 14px; min-width: 0; }
+  .chips { flex-wrap: nowrap; overflow-x: auto; margin: 0 -16px; padding: 0 16px 2px; scrollbar-width: none; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip { flex: none; }
+  .mapwrap { order: 3; position: sticky; top: 0; z-index: 10; height: 40vh; border-left: 0; border-block: 1px solid var(--line); }
+  .order { order: 4; margin: 0; padding: 12px 16px 0; }
+  .list { order: 4; margin: 0; padding: 8px 16px 0; }
+  .card { scroll-margin-top: calc(40vh + 12px); }
+  .foot { order: 5; margin: 24px 16px 32px; }
+  .logo { font-size: 24px; }
+}

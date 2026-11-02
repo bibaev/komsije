@@ -1,0 +1,35 @@
+name: Ошибка на карте / Greška na mapi
+description: Неверная точка, категория, тег или описание / Pogrešna tačka, kategorija, tag ili opis
+labels: ["data"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Адрес, контакты и сам список бизнесов правятся в [таблице инициативы](https://docs.google.com/spreadsheets/d/1IBRo4Frwh6ph5q1Bykk8JeNIzJwntW5JVyS1YGQXJCE/edit#gid=418527537), не здесь.
+        Adresa, kontakti i sam spisak se menjaju u [tabeli inicijative](https://docs.google.com/spreadsheets/d/1IBRo4Frwh6ph5q1Bykk8JeNIzJwntW5JVyS1YGQXJCE/edit#gid=418527537), ne ovde.
+  - type: input
+    id: business
+    attributes:
+      label: Бизнес / Biznis
+      description: Название или ссылка «Поделиться» из карточки / Naziv ili link „Podeli“ iz kartice
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Что не так / Šta nije u redu
+      options:
+        - Точка на карте / Tačka na mapi
+        - Категория или теги / Kategorija ili tagovi
+        - Описание или перевод / Opis ili prevod
+        - Ссылка на соцсети или сайт / Link na mreže ili sajt
+        - Другое / Drugo
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Как должно быть / Kako treba da bude
+      description: Для точки на карте лучше всего ссылка Google Maps на это место / Za tačku na mapi najbolje je Google Maps link
+    validations:
+      required: true

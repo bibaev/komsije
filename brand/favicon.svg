@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Komšije v1 «Улица»: уличная табличка с сердцем — зачем сайт (поддержать соседей). До 2 ноя была буква К/K. -->
+  <rect x="2" y="9" width="60" height="46" rx="7" fill="#1D4F9B"/>
+  <rect x="6.5" y="13.5" width="51" height="37" rx="4" fill="none" stroke="#FFFFFF" stroke-width="3.2"/>
+  <path d="M32 45 19.6 33.1a7.6 7.6 0 0 1 10.7-10.8L32 24l1.7-1.7a7.6 7.6 0 0 1 10.7 10.8z" fill="#FFFFFF"/>
+</svg>

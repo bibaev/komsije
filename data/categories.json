@@ -1,0 +1,15 @@
+{
+  "kofe":      {"ru": "Кофе",         "sr": "Kafa",             "match": ["kaf", "coffee", "kolac"]},
+  "restorany": {"ru": "Рестораны",    "sr": "Restorani",        "match": ["restoran", "kuhinj", "susi", "sushi", "ramen", "bistro", "kafana"]},
+  "eda":       {"ru": "Еда с собой",  "sr": "Hrana za poneti",  "match": ["kebab", "street food", "palacink", "pekar", "dostav", "brza hrana", "fast food", "burger", "pic[ae]", "hrana"]},
+  "bar":       {"ru": "Бары",         "sr": "Barovi",           "match": ["\\bbar\\b", "pivo", "pivnic", "vino", "vinski", "koktel", "lounge"]},
+  "knigi":     {"ru": "Книги",        "sr": "Knjige",           "match": ["knjiz", "knjig"]},
+  "krasota":   {"ru": "Красота",      "sr": "Lepota",           "match": ["frizer", "manikir", "sminka", "kozmet", "lepot", "nokt", "trepav", "obrv", "masaz"]},
+  "podarki":   {"ru": "Подарки",      "sr": "Pokloni",          "match": ["nakit", "poklon", "handmade", "svec", "parfem"]},
+  "obuchenie": {"ru": "Обучение",     "sr": "Edukacija",        "match": ["skol", "kurs", "edukat", "predavanj", "radionic"]},
+  "kultura":   {"ru": "Культура",     "sr": "Kultura",          "match": ["kultur", "galerij", "izlozb", "pozori", "muzej"]},
+  "uslugi":    {"ru": "Услуги",       "sr": "Usluge",           "match": ["pravn", "advokat", "racunovod", "knjigovod", "usluge", "popravk", "sivenj", "konsult", "консулт", "agencij"]},
+  "magazin":   {"ru": "Магазины",     "sr": "Prodavnice",       "match": ["prodavnic", "prodaj", "shop", "vejp"]},
+  "pitomcy":   {"ru": "Питомцы",      "sr": "Ljubimci",         "match": ["groom", "\\bpse\\b", "\\bpas\\b", "mack", "ljubim", "veterin", "\\bzoo"]},
+  "drugoe":    {"ru": "Другое",       "sr": "Ostalo",           "match": []}
+}

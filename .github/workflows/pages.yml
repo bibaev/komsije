@@ -1,0 +1,59 @@
+# Публикация на GitHub Pages. Сборка каждый раз скачивает таблицу заново, поэтому публикация — это и сверка.
+# Когда идёт:
+#   - merge (push) в main;
+#   - вручную: Actions → Publish → Run workflow, или `gh workflow run pages.yml`;
+#   - по расписанию — когда ручная сверка надоест: раскомментировать schedule.
+# Сборка упала (таблица недоступна, перестроена, бизнесов резко меньше) — деплоя нет, на сайте остаётся прошлая версия.
+name: Publish
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Опубликовать, даже если бизнесов стало на треть меньше"
+        type: boolean
+        default: false
+  # schedule:
+  #   - cron: "17 * * * *"  # раз в час; не ровно в :00, тогда очередь Actions короче
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Проверки
+        run: |
+          pip install -e ".[dev]"
+          pytest -q
+          ruff check .
+      - name: Сборка из таблицы
+        # Предупреждения сборки (адреса без точки, бизнесы без обогащения) — в сводку запуска
+        run: python -m komsije.build ${{ inputs.force && '--force' || '' }} | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

@@ -1,0 +1,64 @@
+# Токены бренда Komšije: единственный источник цветов, шрифтов и формы, которые видит человек.
+# Читают: site/style.css (повторяет значения в :root — сверяет tests/test_brand.py).
+# Версия 1 «Улица» (2 ноя 2026): уличная табличка Белграда — синее поле, белая рамка. Правила — brand/style-guide.md.
+version: 1
+name: Улица
+
+themes:
+  # День: серый фасад, белые листы, синие таблички.
+  fasad:
+    bg: "#E6E9EC"          # фасад
+    surface: "#FFFFFF"     # карточки, поиск, кнопки
+    line: "#CFD5DB"        # рамки карточек
+    line_strong: "#98A2AD" # рамки кнопок, разделители
+    text: "#17202A"
+    muted: "#55606C"       # подписи
+    accent: "#1D4F9B"      # ссылки «Маршрут», расстояние
+    cta: "#1D4F9B"         # нажатая кнопка, выбранный фильтр
+    cta_text: "#FFFFFF"
+    plate: "#1D4F9B"       # уличная табличка: логотип, адрес, пиктограммы, точки на карте
+    plate_text: "#FFFFFF"
+    plate_rim: "#FFFFFF"   # белая рамка внутри таблички
+    here: "#D0342C"        # «я здесь» на карте; текстом не используется
+  # Вечер: ночная улица, таблички те же.
+  noc:
+    bg: "#0F151C"
+    surface: "#17212B"
+    line: "#263340"
+    line_strong: "#3B4B5A"
+    text: "#E8EDF2"
+    muted: "#A2B2C1"
+    accent: "#8DB4FF"
+    cta: "#2459AB"
+    cta_text: "#FFFFFF"
+    plate: "#2459AB"
+    plate_text: "#FFFFFF"
+    plate_rim: "#FFFFFF"
+    here: "#FF6A5C"
+
+# Набор PT (ParaType): гуманистический гротеск, настоящая кириллица и сербская латиница (č ć đ š ž), OFL. Проверено 2 ноя.
+fonts:
+  display:                 # логотип, заголовок, имя бизнеса, текст на табличках
+    family: "PT Sans Narrow"
+    google: "PT+Sans+Narrow:wght@400;700"
+    fallback: "'Arial Narrow', sans-serif"
+    weight: 700
+  body:                    # описания, поиск
+    family: "PT Sans"
+    google: "PT+Sans:wght@400;700"
+    fallback: "system-ui, sans-serif"
+  label:                   # категории, фильтры, кнопки, подписи
+    family: "PT Sans Caption"
+    google: "PT+Sans+Caption:wght@400;700"
+    fallback: "system-ui, sans-serif"
+    case: upper            # подписи над списком и категории в карточках
+    tracking: "0.06em"
+
+shape:
+  r_card: "4px"            # карточки, кнопки, поиск
+  r_plate: "5px"           # табличка
+  plate_rim: "1.5px"       # белая рамка, отступ от края 2px
+  bw: "1px"
+
+# Пиктограммы категорий — icons.svg (symbol id="i-<категория>"): заливка, сетка 24, белым на табличке.
+icons: "icons.svg"
