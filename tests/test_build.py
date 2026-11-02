@@ -171,6 +171,7 @@ def test_page_gets_links_for_source_and_adding(isolated):
     assert data["source"].endswith("/htmlview")
     assert data["add_url"].endswith("#gid=" + build.CONFIG["pending_gid"])
     assert data["initiative"]["name"]
+    assert data["initiative"]["author"]["url"].startswith("https://")  # кто начал — по имени и ссылкой
 
 
 def test_share_page_escapes_sheet_values(isolated):
