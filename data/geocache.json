@@ -1,4 +1,5 @@
 {
+ "https://maps.app.goo.gl/2whizHL84xR5LkCt8?g_st=ic": null,
  "https://maps.app.goo.gl/3vx44S16jHcCdYYe7": [
   45.2458507,
   19.8248332
@@ -7,7 +8,13 @@
   45.2445721,
   19.8468691
  ],
+ "https://maps.app.goo.gl/4beB8Q9YNkD3v3tb8": [
+  44.8146094,
+  20.4621911
+ ],
+ "https://maps.app.goo.gl/5RkFMX7sbLsthMNe6?g_st=ic": null,
  "https://maps.app.goo.gl/6SWJHjPVwkqmqMiC9?g_st=ic": null,
+ "https://maps.app.goo.gl/6gZh5LZnKnZ19Yfa9?g_st=ic": null,
  "https://maps.app.goo.gl/7RWQWmNugsfnEqG2A": [
   45.2478569,
   19.836975
@@ -64,6 +71,7 @@
   45.2598818,
   19.8426488
  ],
+ "https://maps.app.goo.gl/XddsDXmMaDDPL4E79": null,
  "https://maps.app.goo.gl/Z1D5EU1htdGUUJBv9?g_st=ic": null,
  "https://maps.app.goo.gl/aCNsf7e9LH5iP4tT9?g_st=ic": null,
  "https://maps.app.goo.gl/afo7xmzEvJfGBstE6?g_st=ic": null,
@@ -116,6 +124,10 @@
   19.8112577
  ],
  "https://maps.app.goo.gl/oScss2YNP9Zx3Csr8?g_st=ac": null,
+ "https://maps.app.goo.gl/pUPMfhG9pjGHQYuL8": [
+  44.8136689,
+  20.4535611
+ ],
  "https://maps.app.goo.gl/pUQYHXZDpSvyoA6W7": [
   45.2583706,
   19.8488491
@@ -145,5 +157,10 @@
  "https://maps.app.goo.gl/zbX8PfqgNJUseJTw8": [
   44.8086379,
   20.458397
+ ],
+ "https://share.google/Q9lVR9AAEKx5g4pj6": null,
+ "https://www.google.com/maps/place/Hair+extension+S28/@44.8086658,20.4615843,17z/data=!3m1!4b1!4m6!3m5!1s0x475a711985755603:0x3da5ec21cf17e54e!8m2!3d44.8086658!4d20.4641592!16s%2Fg%2F11w4gvp55g": [
+  44.8086658,
+  20.4641592
  ]
 }
