@@ -89,6 +89,19 @@ def test_hidden_business_disappears_with_its_extra_rows(isolated, monkeypatch):
     assert any("попросили убрать" in w for w in warnings)
 
 
+def test_row_without_mb_or_pib_is_not_a_business(isolated):
+    # инициатива проверяет по номеру: строка без него — шум (2 ноя попала строка «`»), как и ее продолжения
+    data, warnings = build.build(sheet(
+        f"Kafa,Kafe,87654321,Ulica 1,Beograd,{gmaps(44.81, 20.46)},,,,",
+        "`,,,,,,,,,",
+        f",,,Bulevar 2,Novi Sad,{gmaps(45.25, 19.83)},,,,",
+    ))
+    [b] = data["businesses"]
+    assert b["id"] == "87654321" and len(b["locations"]) == 1
+    assert list(data["cities"]) == ["beograd"]
+    assert any("«`»" in w for w in warnings)
+
+
 def test_publish_stops_when_a_third_of_businesses_vanish():
     def biz(n):
         return {"businesses": [{"id": str(i)} for i in range(n)]}
