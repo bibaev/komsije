@@ -54,6 +54,25 @@ def norm(s: str) -> str:
     return "".join(c for c in s if not unicodedata.combining(c)).replace("đ", "d")
 
 
+# Кириллица → латиница для сравнения адресов (сербская азбука плюс русские буквы, которые встречаются в таблице)
+CYR = str.maketrans({
+    "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "ђ": "d", "е": "e", "ж": "z", "з": "z", "и": "i",
+    "ј": "j", "к": "k", "л": "l", "љ": "lj", "м": "m", "н": "n", "њ": "nj", "о": "o", "п": "p", "р": "r",
+    "с": "s", "т": "t", "ћ": "c", "у": "u", "ф": "f", "х": "h", "ц": "c", "ч": "c", "џ": "dz", "ш": "s",
+    "щ": "s", "ы": "y", "э": "e", "ю": "ju", "я": "ja", "ь": "", "ъ": "", "й": "j",
+})
+
+
+def addr_key(address: str) -> str:
+    """Адрес → ключ для точек из overrides.json: без регистра, диакритики, разницы кириллицы и латиницы,
+    города, индекса и знаков. 2 ноя инициатива почистила адреса («Palmoticheva, 5» → «Palmoticheva 5»,
+    кириллицу → латиницу), и точки, привязанные к адресу дословно, отвалились."""
+    s = norm(address).translate(CYR)
+    s = re.sub(r"\b\d{5}\b", " ", s)  # почтовый индекс
+    s = re.sub(r"\b(beograd|belgrade|novi sad|srbija|serbija|serbia)\b", " ", s)
+    return " ".join(re.sub(r"[^\w]+", " ", s).split())
+
+
 def lines(cell: str) -> list[str]:
     return [x.strip() for x in cell.splitlines() if x.strip() and x.strip() != "-"]
 
@@ -131,7 +150,9 @@ def resolve(url: str, cache: dict) -> tuple[float, float] | None:
 # --- таблица ----------------------------------------------------------------
 
 COLS = {
-    "naziv": "name", "delatnost": "activity", "maticni broj / pib": "pib",
+    # Номер: сначала был одной колонкой «Matični broj / PIB», 2 ноя ее разделили на две — читаем оба вида,
+    # значения склеиваются в одно поле (MB первым), поэтому id бизнеса и ссылки «Поделиться» не меняются.
+    "naziv": "name", "delatnost": "activity", "maticni broj / pib": "pib", "maticni broj": "pib", "pib": "pib",
     "adresa": "address", "grad": "city", "google maps": "maps",
     "sajt biznisa": "site", "threads": "threads", "telegram": "telegram",
     "instagram": "instagram",
@@ -154,7 +175,10 @@ def parse_rows(text: str) -> list[dict]:
     keys = [COLS.get(norm(h)) for h in rows[hi]]
     out = []
     for r in rows[hi + 1:]:
-        rec = {k: v for k, v in zip(keys, r) if k}
+        rec: dict[str, str] = {}
+        for k, v in zip(keys, r):
+            if k:  # две колонки в одно поле (MB и PIB) — через пробел, а не последняя побеждает
+                rec[k] = f"{rec[k]} {v}".strip() if k in rec else v
         if any(v.strip() for v in rec.values()):
             out.append(rec)
     return out
@@ -224,7 +248,7 @@ def assemble(text: str) -> tuple[dict, list[str], list[dict]]:
         row_cities = cities_of(rec.get("city", ""))
         cities.update(row_cities)
         city_ids = [cid for cid, _ in row_cities]
-        points = ov.get("points", {})
+        points = {addr_key(a): ll for a, ll in ov.get("points", {}).items()}
 
         addrs = lines(rec.get("address", ""))
         # В колонку карт пишут и текст («Radim onlajn…»): точку дают только ссылки.
@@ -241,7 +265,7 @@ def assemble(text: str) -> tuple[dict, list[str], list[dict]]:
             ll = resolve(links[i], cache) if paired and i < len(links) else None
             # Ссылка «поделиться» с телефона и список мест ведут на поиск без координат:
             # точку по адресу ставят руками в overrides.json («points»).
-            ll = ll or (tuple(points[addr]) if addr in points else None)
+            ll = ll or (tuple(points[addr_key(addr)]) if addr_key(addr) in points else None)
             # Два города на два адреса — по порядку; иначе все точки в первом городе ячейки.
             city = city_ids[i] if len(city_ids) == n_locs > 1 else (city_ids[0] if city_ids else None)
             route = link or (
@@ -258,7 +282,9 @@ def assemble(text: str) -> tuple[dict, list[str], list[dict]]:
                 current["locations"].extend(locs)
             continue
 
-        pib = nums[0]
+        # id — номер, под которым бизнес уже записан в обогащении: 2 ноя таблица разделила MB и PIB, и у части
+        # бизнесов первым номером стал MB. Без этого их ключи и разосланные ссылки «Поделиться» сменились бы.
+        pib = next((n for n in nums if n in OVERRIDES), nums[0])
         if pib in by_id:
             # Один бизнес двумя строками («Cacafe» и «Ca.ca.fe», 2 ноя): одна карточка, новые адреса — к ней.
             current = by_id[pib]
@@ -276,8 +302,8 @@ def assemble(text: str) -> tuple[dict, list[str], list[dict]]:
             # app.js находит бизнес по номеру в хвосте, даже если имя поменяли.
             "key": f"{slug}-{pib}",
             "_curated": bool(ov),
-            "_points": set(points),
-            "_no_point": set(ov.get("no_point", [])),
+            "_points": list(ov.get("points", {})),
+            "_no_point": list(ov.get("no_point", [])),
             "name": name,
             "online": not city_ids,
             "categories": ov.get("categories") or guess_categories(activity),
@@ -294,11 +320,13 @@ def assemble(text: str) -> tuple[dict, list[str], list[dict]]:
     todo: list[dict] = []
     for b in businesses:
         no_point = b.pop("_no_point")  # искали и не нашли: из списка дел уходит, в предупреждения не попадает
-        missing = [loc for loc in b["locations"] if loc["lat"] is None and loc["address"] not in no_point]
+        no_point_keys = {addr_key(a) for a in no_point}
+        missing = [loc for loc in b["locations"] if loc["lat"] is None and addr_key(loc["address"]) not in no_point_keys]
         if missing:
             warnings.append(f"{b['name']}: без точки на карте — {', '.join(loc['address'] for loc in missing)}")
-        # Точка из overrides.json ищется по адресу дословно: адрес в таблице поправили — точка пропала.
-        stale = (b.pop("_points") | no_point) - {loc["address"] for loc in b["locations"]}
+        # Точка из overrides.json ищется по адресу (addr_key): адрес в таблице заменили на другой — точка пропала.
+        here = {addr_key(loc["address"]) for loc in b["locations"]}
+        stale = {a for a in b.pop("_points") + no_point if addr_key(a) not in here}
         if stale:
             warnings.append(f"{b['name']}: в overrides.json адрес, которого нет в таблице — "
                             f"{', '.join(sorted(stale))}")

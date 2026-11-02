@@ -1,4 +1,8 @@
 {
+ "https://maps.app.goo.gl/1pu8dCJZasrHJxQv7": [
+  44.8115784,
+  20.4692779
+ ],
  "https://maps.app.goo.gl/2whizHL84xR5LkCt8?g_st=ic": null,
  "https://maps.app.goo.gl/3vx44S16jHcCdYYe7": [
   45.2458507,
@@ -39,6 +43,7 @@
   45.2584763,
   19.8157763
  ],
+ "https://maps.app.goo.gl/JvVNoKhiphQXbzEM6?g_st=ac": null,
  "https://maps.app.goo.gl/KjQKSicjPnq5LqaA6": [
   44.8231287,
   20.4568166
@@ -49,6 +54,10 @@
   20.4560154
  ],
  "https://maps.app.goo.gl/MjzEzQ1xZoV1UzeCA?g_st=ic": null,
+ "https://maps.app.goo.gl/PSu1dEQDStEBRR7E7": [
+  44.8036316,
+  20.4870273
+ ],
  "https://maps.app.goo.gl/QmdAoKBYnnvgQK2L7": [
   44.7988396,
   20.4906985
@@ -58,11 +67,13 @@
   45.2535444,
   19.840445
  ],
+ "https://maps.app.goo.gl/TV5BaAGn5eCpnSoTA": null,
  "https://maps.app.goo.gl/UGShHuvNZnPR4Rpr6": null,
  "https://maps.app.goo.gl/VoePBqiRmfPz1qxW9": [
   44.8208267,
   20.4631533
  ],
+ "https://maps.app.goo.gl/WRNYCgC9jrTiKPGM6?g_st=ic": null,
  "https://maps.app.goo.gl/XG7opHFGdLjLzmZd9": [
   44.8023617,
   20.45189
@@ -86,6 +97,10 @@
  "https://maps.app.goo.gl/bqWDyMbf6DHh3P2YA": [
   44.8188976,
   20.4749142
+ ],
+ "https://maps.app.goo.gl/c6A6EhRxMpyc49qW6": [
+  44.8178752,
+  20.4545339
  ],
  "https://maps.app.goo.gl/e8bWoHvSYpsjfR4h8": [
   45.254619,
@@ -148,6 +163,7 @@
   44.8207997,
   20.4641341
  ],
+ "https://maps.app.goo.gl/trjzaTVnq7MitffJA?g_st=ic": null,
  "https://maps.app.goo.gl/vKT5KmAM9y7vXrFj7": [
   45.2499518,
   19.8394505
@@ -158,9 +174,5 @@
   44.8086379,
   20.458397
  ],
- "https://share.google/Q9lVR9AAEKx5g4pj6": null,
- "https://www.google.com/maps/place/Hair+extension+S28/@44.8086658,20.4615843,17z/data=!3m1!4b1!4m6!3m5!1s0x475a711985755603:0x3da5ec21cf17e54e!8m2!3d44.8086658!4d20.4641592!16s%2Fg%2F11w4gvp55g": [
-  44.8086658,
-  20.4641592
- ]
+ "https://share.google/Q9lVR9AAEKx5g4pj6": null
 }

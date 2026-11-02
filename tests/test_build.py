@@ -41,13 +41,17 @@ def test_row_without_name_adds_location_to_previous_business(isolated):
 
 
 def test_mb_and_pib_in_one_cell(isolated, monkeypatch):
-    # id — первый номер; обогащение находится по любому из двух
+    # обогащение находится по любому из двух номеров; id — тот, под которым бизнес записан в обогащении,
+    # а если записи нет — первый номер ячейки
     monkeypatch.setattr(build, "OVERRIDES", {"100000002": {"categories": ["eda"]}})
-    data, _ = build.build(sheet(f"Pekara,Pekara,10000001 / 100000002,Ulica 13,Beograd,{gmaps(44.81, 20.47)},,,,"))
-    [b] = data["businesses"]
-    assert b["id"] == "10000001"
-    assert b["key"].endswith("-10000001")
-    assert b["categories"] == ["eda"]
+    data, _ = build.build(sheet(
+        f"Pekara,Pekara,10000001 / 100000002,Ulica 13,Beograd,{gmaps(44.81, 20.47)},,,,",
+        f"Kafa,Kafe,10000005 / 100000006,Ulica 14,Beograd,{gmaps(44.82, 20.47)},,,,",
+    ))
+    known, fresh = data["businesses"]
+    assert (known["id"], known["categories"]) == ("100000002", ["eda"])
+    assert known["key"].endswith("-100000002")
+    assert fresh["id"] == "10000005"
 
 
 def test_one_link_for_many_addresses_is_a_places_list(isolated):
@@ -150,6 +154,49 @@ def test_geocode_hit_is_reliable_only_with_same_house_inside_city():
     assert not todo_mod.reliable("2a", "beograd", {**hit, "lat": "44.49"})  # тот же адрес в пригороде
     assert not todo_mod.reliable("2a", None, hit)
     assert todo_mod.reliable("2", "beograd", {**hit, "address": {"house_number": "2-4"}})  # дом-диапазон
+
+
+SPLIT_HEADER = "Naziv,Delatnost,Matični broj,PIB,Adresa,Grad,Google maps,Sajt biznisa,Threads ,Telegram,Instagram,Komentar\n"
+
+
+def test_mb_and_pib_in_separate_columns_keep_the_known_id(isolated, monkeypatch):
+    # 2 ноя таблица разделила «Matični broj / PIB» на две колонки: читаются обе, а id остается тем,
+    # под которым бизнес уже есть в обогащении (иначе разосланные ссылки «Поделиться» ломаются)
+    monkeypatch.setattr(build, "OVERRIDES", {"100000002": {"name": "Pekara"}})
+    data, _ = build.build(SPLIT_HEADER + "\n".join([
+        f'Stara,Pekara,10000001,100000002,Ulica 1,Beograd,"{gmaps(44.81, 20.46)}",,,,,',
+        f'Nova,Kafe,10000003,100000004,Ulica 2,Beograd,"{gmaps(44.82, 20.47)}",,,,,',
+    ]) + "\n")
+    old, new = data["businesses"]
+    assert (old["id"], old["name"]) == ("100000002", "Pekara")
+    assert new["id"] == "10000003"  # нового в обогащении нет — первым идет MB
+
+
+@pytest.mark.parametrize(("in_overrides", "in_sheet"), [
+    ("Kраљевића Марка 5, Београд 11050, Сербия", "Kraljevića Marka 5"),  # латинская K среди кириллицы
+    ("Palmoticheva, 5", "Palmoticheva 5"),
+    ("Beograd, Dalmatinska 72", "Dalmatinska 72"),
+    ("Kapetan-Misina 17, Beograd", "Kapetan Mišina 17"),
+    ("Маjке Jeвросиме 35", "Majke Jevrosime 35"),
+])
+def test_point_survives_address_rewritten_in_the_sheet(in_overrides, in_sheet):
+    # инициатива чистит адреса: точка в overrides.json должна найтись и после этого
+    assert build.addr_key(in_overrides) == build.addr_key(in_sheet)
+
+
+def test_different_houses_stay_different():
+    assert build.addr_key("Cerska 115") != build.addr_key("Cerska 11")
+    assert build.addr_key("Beogradska 5") != build.addr_key("5")  # «Beograd» вычеркивается только словом
+
+
+def test_same_house_in_two_places_is_not_reliable():
+    # «Jug Bogdanova 8» есть и в центре, и в Винче — оба в границах Белграда: точку проверяют руками
+    center = {"lat": "44.8141", "lon": "20.4558", "address": {"house_number": "8"}}
+    vinca = {"lat": "44.7491", "lon": "20.6016", "address": {"house_number": "8"}}
+    assert todo_mod.judge("8", "beograd", [center])[0] == "надежно"
+    verdict, hit = todo_mod.judge("8", "beograd", [vinca, center])
+    assert verdict.startswith("проверить") and hit is vinca
+    assert todo_mod.judge("8", "beograd", [])[0] == "не нашел"
 
 
 def test_publish_stops_when_a_third_of_businesses_vanish():
