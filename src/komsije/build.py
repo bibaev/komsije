@@ -320,13 +320,14 @@ def read_data() -> dict | None:
 
 
 STUB = """<!doctype html>
-<html lang="ru">
+<html lang="sr-Latn">
 <head>
 <meta charset="utf-8">
 <title>{name} · Komšije</title>
 <meta name="description" content="{desc}">
 <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
 <meta property="og:site_name" content="Komšije">
+<meta property="og:locale" content="sr_RS">
 <meta property="og:title" content="{name}">
 <meta property="og:description" content="{desc}">
 <meta property="og:type" content="website">{image}
