@@ -194,6 +194,7 @@ def build(text: str) -> dict:
 
     used: set[str] = set()
     ov: dict = {}
+    skip = ""
 
     for rec in parse_rows(text):
         name = rec.get("name", "").strip()
@@ -202,11 +203,15 @@ def build(text: str) -> dict:
         nums = re.findall(r"\d{8,9}", rec.get("pib", ""))
         if name:
             ov = next((OVERRIDES[n] for n in nums if n in OVERRIDES), {})
-            if ov.get("hidden"):
-                warnings.append(f"{ov.get('name') or name}: скрыт — {ov['hidden']}")
-        # Бизнес попросил убрать себя, а правка таблицы ждёт инициативу: не показываем
-        # ни его, ни его строки-продолжения, и город ради него не заводим.
-        if ov.get("hidden"):
+            # Не показываем ни бизнес, ни его строки-продолжения, и город ради него не заводим, если:
+            # - нет номера MB или ПИБ: инициатива проверяет по нему, без номера это шум или поломка
+            #   (2 ноя во вкладку попала строка из одного символа «`»);
+            # - бизнес попросил убрать себя, а правка таблицы ждёт инициативу (hidden).
+            skip = ("нет номера MB или ПИБ, строка пропущена" if not nums
+                    else f"скрыт — {ov['hidden']}" if ov.get("hidden") else "")
+            if skip:
+                warnings.append(f"«{ov.get('name') or name}»: {skip}")
+        if skip:
             continue
         row_cities = cities_of(rec.get("city", ""))
         cities.update(row_cities)
@@ -245,7 +250,7 @@ def build(text: str) -> dict:
                 businesses[-1]["locations"].extend(locs)
             continue
 
-        pib = nums[0] if nums else norm(name)
+        pib = nums[0]
         activity = " ".join(lines(rec.get("activity", "")))
         # В таблице часто юридическое имя («… PR», «d.o.o.»); слой обогащения даёт человеческое.
         name = ov.get("name") or name
@@ -254,7 +259,7 @@ def build(text: str) -> dict:
             "id": pib,
             # Ключ ссылки «поделиться»: имя для читаемости, номер для стабильности —
             # app.js находит бизнес по номеру в хвосте, даже если имя поменяли.
-            "key": f"{slug}-{pib}" if pib.isdigit() else slug,
+            "key": f"{slug}-{pib}",
             "_curated": bool(ov),
             "_points": set(points),
             "name": name,
