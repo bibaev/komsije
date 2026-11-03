@@ -3,6 +3,10 @@
   44.8115784,
   20.4692779
  ],
+ "https://maps.app.goo.gl/2Unymwxg3GoUtSsL8": [
+  44.6950057,
+  20.6663104
+ ],
  "https://maps.app.goo.gl/2whizHL84xR5LkCt8?g_st=ic": null,
  "https://maps.app.goo.gl/3vx44S16jHcCdYYe7": [
   45.2458507,
@@ -23,11 +27,13 @@
   45.2478569,
   19.836975
  ],
+ "https://maps.app.goo.gl/82632oKJvhi5gPHK6?g_st=ic": null,
  "https://maps.app.goo.gl/8P4dxauMK7LsWrpUA?g_st=ic": null,
  "https://maps.app.goo.gl/94Kf2PE6HdRKicH47": [
   44.8137522,
   20.4604766
  ],
+ "https://maps.app.goo.gl/9XjMXuPZHGWsf282A": null,
  "https://maps.app.goo.gl/ADjiecNeeSWuVm329?g_st=ic": null,
  "https://maps.app.goo.gl/AVy76dMFuacbDKBM9?g_st=ic": null,
  "https://maps.app.goo.gl/AnWY9FXu9vrt6n2q6": [
@@ -48,6 +54,7 @@
   44.8231287,
   20.4568166
  ],
+ "https://maps.app.goo.gl/LAZ1ofAP3LSfpLa38?g_st=ic": null,
  "https://maps.app.goo.gl/LGscR5e3EPig3mkZ6?g_st=ic": null,
  "https://maps.app.goo.gl/LJmyBVuCZuobbA5W8": [
   44.8229841,
@@ -90,6 +97,7 @@
   45.262699,
   19.8501069
  ],
+ "https://maps.app.goo.gl/b4NCkzfrRNaR72YTA?g_st=ac": null,
  "https://maps.app.goo.gl/be1cKCsDPi2bmZVR8": [
   44.791858,
   20.4758074
@@ -102,6 +110,11 @@
   44.8178752,
   20.4545339
  ],
+ "https://maps.app.goo.gl/cnoLe4zGgY5LYadu9": null,
+ "https://maps.app.goo.gl/diGJaoCCpRcZEsDA9": [
+  45.2729192,
+  19.7831317
+ ],
  "https://maps.app.goo.gl/e8bWoHvSYpsjfR4h8": [
   45.254619,
   19.8350608
@@ -109,6 +122,10 @@
  "https://maps.app.goo.gl/f6JE87RxoPNHANbw8?g_st=ic": null,
  "https://maps.app.goo.gl/ff27Tf69zXsXV3eX7?g_st=ic": null,
  "https://maps.app.goo.gl/fzj2nKjYgqo6skGEA?g_st=ic": null,
+ "https://maps.app.goo.gl/htPL3mqy6CWFW5Ae7": [
+  45.2614436,
+  19.8536075
+ ],
  "https://maps.app.goo.gl/jNEscQmVfkv8TSwU7": [
   44.8183279,
   20.4776531
@@ -159,6 +176,7 @@
   44.8180548,
   20.4742822
  ],
+ "https://maps.app.goo.gl/rnDBWK2XBdkaV9rBA?g_st=ac": null,
  "https://maps.app.goo.gl/tpnJynR9fVa6MzS48": [
   44.8207997,
   20.4641341
@@ -174,5 +192,6 @@
   44.8086379,
   20.458397
  ],
+ "https://maps.google.com/maps/place//data=!4m2!3m1!1s0x475a654c96ac5c6b:0x820f51599f089877?entry=s&sa=X&ved=2ahUKEwia7t2Gl-qXAxVpSPEDHSzPC5IQ4kB6BAgVEAA&hl=ru": null,
  "https://share.google/Q9lVR9AAEKx5g4pj6": null
 }

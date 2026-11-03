@@ -68,13 +68,25 @@ def geocode(street: str, city: str | None) -> list[dict]:
         return []
 
 
-def judge(number: str, city: str | None, hits: list[dict]) -> tuple[str, dict | None]:
-    """Вердикт по кандидатам: «надежно» — только если тот же дом в городе нашелся в одном месте.
+def same_street(street: str, hit: dict) -> bool:
+    """У кандидата та же улица: общее слово длиннее трех букв, кириллица и латиница сравниваются как одно.
+
+    OpenStreetMap подмешивает соседние улицы с тем же номером: 3 ноя на «Gajeva 8» вернулась и «Лагумска 8».
+    """
+    def words(s: str) -> set[str]:
+        return {w for w in build.addr_key(s).split() if len(w) > 3}
+    return bool(words(street) & words(hit.get("address", {}).get("road", "")))
+
+
+def judge(street: str, number: str, city: str | None, hits: list[dict]) -> tuple[str, dict | None]:
+    """Вердикт по кандидатам: «надежно» — только если тот же дом на той же улице в городе нашелся в одном месте.
 
     2 ноя «Jug Bogdanova 8» нашелся в Савском венце, Винче и Лештане — все три в границах Белграда,
     и первым OpenStreetMap отдал Винчу, а бизнес в центре. Несколько мест — «проверить».
+    Кандидаты с другой улицей не считаются, если есть хоть один с той же.
     """
     good = [h for h in hits if reliable(number, city, h)]
+    good = [h for h in good if same_street(street, h)] or good
     places = {(round(float(h["lat"]), 2), round(float(h["lon"]), 2)) for h in good}  # ~1 км
     if len(places) == 1:
         return "надежно", good[0]
@@ -102,7 +114,7 @@ def report(todo: list[dict], cities: dict, do_geocode: bool) -> str:
         if not do_geocode:
             out.append(f"{line} → искать: {q[0]}")
             continue
-        verdict, hit = judge(q[1], m["city"], geocode(q[0], m["city"]))
+        verdict, hit = judge(q[0], q[1], m["city"], geocode(q[0], m["city"]))
         time.sleep(1.1)  # правила OpenStreetMap: не чаще запроса в секунду
         if not hit:
             out.append(f"{line} → OpenStreetMap не нашел: ссылка Google Maps из таблицы или no_point")
