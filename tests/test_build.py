@@ -172,6 +172,14 @@ def test_mb_and_pib_in_separate_columns_keep_the_known_id(isolated, monkeypatch)
     assert new["id"] == "10000003"  # нового в обогащении нет — первым идет MB
 
 
+def test_rows_above_the_column_names_are_not_businesses(isolated):
+    # 3 ноя над названиями колонок появились строки со ссылками на сайты-карты и оговоркой:
+    # заголовок ищется по «Naziv», все, что выше, — не бизнесы
+    above = "SAJTOVI ZA PREGLED TABELE,,,,,,,,,,,\nhttps://example.org/,,,,,,,,,,,\n*Napomena,,,,,,,,,,,\n"
+    data, _ = build.build(above + SPLIT_HEADER + f'Kafe,Kafe,10000001,100000002,Ulica 1,Beograd,"{gmaps(44.81, 20.46)}",,,,,\n')
+    assert [b["name"] for b in data["businesses"]] == ["Kafe"]
+
+
 @pytest.mark.parametrize(("in_overrides", "in_sheet"), [
     ("Kраљевића Марка 5, Београд 11050, Сербия", "Kraljevića Marka 5"),  # латинская K среди кириллицы
     ("Palmoticheva, 5", "Palmoticheva 5"),

@@ -260,5 +260,9 @@
                "tags": {"ru": ["пиво"], "sr": ["pivo"]}},
   "21776025": {"name": "KidsAndSweets", "categories": ["magazin"], "description_ru": "Интернет-магазин товаров для малышей",
                "description_sr": "Internet prodavnica za bebe",
-               "tags": {"ru": ["для детей", "интернет-магазин"], "sr": ["za decu", "internet prodavnica"]}}
+               "tags": {"ru": ["для детей", "интернет-магазин"], "sr": ["za decu", "internet prodavnica"]}},
+
+  "67457129": {"categories": ["magazin"], "description_ru": "Винотека: вино и деликатесы",
+               "points": {"Dunavska 4": [45.2566148, 19.8487813]},
+               "tags": {"ru": ["вино", "деликатесы"], "sr": ["vino", "delikatesi"]}}
 }
