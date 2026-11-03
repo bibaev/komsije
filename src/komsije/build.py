@@ -37,12 +37,14 @@ UA = "komsije/0.1"
 CITIES = {
     "beograd": {"ru": "Белград", "sr": "Beograd"},
     "novi-sad": {"ru": "Нови-Сад", "sr": "Novi Sad"},
+    "subotica": {"ru": "Суботица", "sr": "Subotica"},  # 3 ноя — первый бизнес (SU Bar)
 }
 # Как люди пишут город в таблице → id. Ключи после norm(); кириллица в нём остаётся кириллицей.
 CITY_ALIASES = {
     "beograd": "beograd", "belgrade": "beograd", "novi beograd": "beograd", "zemun": "beograd",
     "београд": "beograd", "белград": "beograd", "нови београд": "beograd",
     "novi sad": "novi-sad", "novisad": "novi-sad", "нови сад": "novi-sad", "нови-сад": "novi-sad",
+    "subotica": "subotica", "суботица": "subotica",
 }
 ONLINE = re.compile(r"online|onlajn|онлајн|онлайн|internet")
 # Хвосты ссылок из соцсетей: метки трекинга, не адрес.
@@ -250,7 +252,12 @@ def assemble(text: str) -> tuple[dict, list[str], list[dict]]:
         city_ids = [cid for cid, _ in row_cities]
         points = {addr_key(a): ll for a, ll in ov.get("points", {}).items()}
 
-        addrs = lines(rec.get("address", ""))
+        # «online» пишут и в колонку адреса при обычном городе (3 ноя: психолог, торты для собак):
+        # это не место, а признак онлайн-бизнеса. Но «Dimitrija Tucovića 2a (moze i online)» — адрес:
+        # онлайн только строка без номера дома
+        all_addrs = lines(rec.get("address", ""))
+        addrs = [a for a in all_addrs if not (ONLINE.search(norm(a)) and not re.search(r"\d", a))]
+        online_only = bool(all_addrs) and not addrs
         # В колонку карт пишут и текст («Radim onlajn…»): точку дают только ссылки.
         links = [u for u in lines(rec.get("maps", "")) if clean_url(u)]
         used.update(links)
@@ -278,7 +285,11 @@ def assemble(text: str) -> tuple[dict, list[str], list[dict]]:
 
         if not name:
             # Строка-продолжение: ещё точки предыдущего бизнеса (VapeMe в Нови-Саде).
+            # Город в ней часто не повторяют (Willow, 3 ноя) — тогда он тот же, что у бизнеса.
             if current:
+                home = next((loc["city"] for loc in current["locations"] if loc["city"]), None)
+                for loc in locs:
+                    loc["city"] = loc["city"] or home
                 current["locations"].extend(locs)
             continue
 
@@ -305,7 +316,7 @@ def assemble(text: str) -> tuple[dict, list[str], list[dict]]:
             "_points": list(ov.get("points", {})),
             "_no_point": list(ov.get("no_point", [])),
             "name": name,
-            "online": not city_ids,
+            "online": not city_ids or online_only,
             "categories": ov.get("categories") or guess_categories(activity),
             "tags": ov.get("tags", {"ru": [], "sr": []}),
             "description": {"ru": ov.get("description_ru") or activity, "sr": ov.get("description_sr") or activity},

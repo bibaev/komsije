@@ -25,6 +25,7 @@ from . import build
 BOUNDS = {  # id города → (запад, юг, восток, север)
     "beograd": (20.25, 44.70, 20.65, 44.90),
     "novi-sad": (19.75, 45.20, 19.95, 45.32),
+    "subotica": (19.60, 46.05, 19.75, 46.13),
 }
 NOMINATIM = "https://nominatim.openstreetmap.org/search"
 
