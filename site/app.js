@@ -21,7 +21,7 @@
       geoFail: "Не получилось определить, где ты. Разреши доступ к геолокации и попробуй еще раз.",
       sorted: "Сначала ближайшие к тебе", random: "В случайном порядке, чтобы никто не был первым всегда",
       share: "Поделиться", shareMap: "Поделиться картой", copied: "Ссылка скопирована", copyThis: "Скопируй ссылку:",
-      route: "Маршрут", site: "Сайт", onlineShop: "Работает онлайн, заказ через соцсети или сайт",
+      maps: "Отзывы и фото", site: "Сайт", onlineShop: "Работает онлайн, заказ через соцсети или сайт",
       noPin: "нет на карте", placesList: "Все точки на Google Maps", more: (n) => `еще ${n}`,
       empty: "Ничего не нашлось.", reset: "Сбросить фильтры",
       places: (n) => `${n} ${plural(n, ["место", "места", "мест"])}`,
@@ -45,7 +45,7 @@
       geoFail: "Nije uspelo određivanje lokacije. Dozvoli pristup lokaciji i pokušaj ponovo.",
       sorted: "Prvo najbliži tebi", random: "Nasumičnim redosledom, da niko nije uvek prvi",
       share: "Podeli", shareMap: "Podeli mapu", copied: "Link je kopiran", copyThis: "Kopiraj link:",
-      route: "Kako stići", site: "Sajt", onlineShop: "Radi online, porudžbine preko mreža ili sajta",
+      maps: "Recenzije i fotografije", site: "Sajt", onlineShop: "Radi online, porudžbine preko mreža ili sajta",
       noPin: "nije na mapi", placesList: "Sve lokacije na Google Maps", more: (n) => `još ${n}`,
       empty: "Nema rezultata.", reset: "Poništi filtere",
       places: (n) => `${n} ${plural(n, ["mesto", "mesta", "mesta"])}`,
@@ -230,8 +230,8 @@
     const box = el("div", "pop");
     box.append(el("b", null, b.name), el("span", null, b.categories.map((c) => D.categories[c][state.lang]).join(" · ")),
       el("span", null, `${loc.address}, ${cityLabel(loc.city)}`));
-    const a = link(loc.route, `${t().route} ↗`);
-    if (a) { a.addEventListener("click", () => track(`route/${b.key}`, b.name)); box.append(a); }
+    const a = link(loc.maps, `${t().maps} ↗`);
+    if (a) { a.addEventListener("click", () => track(`maps/${b.key}`, b.name)); box.append(a); }
     return box;
   }
 
@@ -401,8 +401,8 @@
         if (state.city === "all" && l.city) where.append(el("span", "city", cityLabel(l.city)));
         if (l.lat == null && !b.places_list) where.append(el("span", "nopin", t().noPin));
         row.append(where);
-        const a = !b.places_list && link(l.route, `${t().route} ↗`);
-        if (a) { a.addEventListener("click", () => track(`route/${b.key}`, b.name)); row.append(a); }
+        const a = !b.places_list && link(l.maps, `${t().maps} ↗`);
+        if (a) { a.addEventListener("click", () => track(`maps/${b.key}`, b.name)); row.append(a); }
         ul.append(row);
       });
       if (locs.length > limit) {
@@ -412,8 +412,8 @@
       }
       if (b.places_list) {
         const row = el("li", "loc"); const a = link(b.places_list, `${t().placesList} ↗`, "places");
-        // Список точек на Google Maps — тот же «Маршрут» для бизнеса с несколькими адресами
-        if (a) { a.addEventListener("click", () => track(`route/${b.key}`, b.name)); row.append(a); ul.append(row); }
+        // Список точек на Google Maps — та же карточка места для бизнеса с несколькими адресами
+        if (a) { a.addEventListener("click", () => track(`maps/${b.key}`, b.name)); row.append(a); ul.append(row); }
       }
       li.append(ul);
     }

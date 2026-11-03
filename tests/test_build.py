@@ -1,5 +1,6 @@
 """Разбор таблицы: правила, на которых держится карта. Сеть не нужна: в фикстурах полные ссылки Google Maps."""
 import json
+import urllib.parse
 
 import pytest
 
@@ -256,6 +257,19 @@ def test_continuation_row_without_city_keeps_the_business_city(isolated):
     ))
     [b] = data["businesses"]
     assert [loc["city"] for loc in b["locations"]] == ["novi-sad", "novi-sad"]
+
+
+def test_address_without_link_searches_the_place_by_name(isolated):
+    # по одному адресу Google показывает дом; с именем — карточку заведения с отзывами и фото,
+    # и для строки-продолжения тоже, хотя имени в ней нет
+    data, _ = build.build(sheet(
+        'Kafe Zora,Kafe,12345678,Cerska 1,Beograd,,,,,',
+        ',,,Gajeva 2,,,,,,',
+    ))
+    [b] = data["businesses"]
+    links = [urllib.parse.unquote(loc["maps"]) for loc in b["locations"]]
+    assert links == ["https://www.google.com/maps/search/?api=1&query=Kafe Zora, Cerska 1, Beograd, Srbija",
+                     "https://www.google.com/maps/search/?api=1&query=Kafe Zora, Gajeva 2, Srbija"]
 
 
 def test_two_cities_for_two_addresses_pair_in_order(isolated):
