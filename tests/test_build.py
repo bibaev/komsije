@@ -190,13 +190,21 @@ def test_different_houses_stay_different():
 
 
 def test_same_house_in_two_places_is_not_reliable():
-    # «Jug Bogdanova 8» есть и в центре, и в Винче — оба в границах Белграда: точку проверяют руками
-    center = {"lat": "44.8141", "lon": "20.4558", "address": {"house_number": "8"}}
-    vinca = {"lat": "44.7491", "lon": "20.6016", "address": {"house_number": "8"}}
-    assert todo_mod.judge("8", "beograd", [center])[0] == "надежно"
-    verdict, hit = todo_mod.judge("8", "beograd", [vinca, center])
-    assert verdict.startswith("проверить") and hit is vinca
-    assert todo_mod.judge("8", "beograd", [])[0] == "не нашел"
+    # одна улица с тем же домом и в центре, и на окраине — оба в границах Белграда: точку проверяют руками
+    center = {"lat": "44.8141", "lon": "20.4558", "address": {"road": "Липова", "house_number": "8"}}
+    edge = {"lat": "44.7491", "lon": "20.6016", "address": {"road": "Lipova", "house_number": "8"}}
+    assert todo_mod.judge("Lipova 8", "8", "beograd", [center])[0] == "надежно"
+    verdict, hit = todo_mod.judge("Lipova 8", "8", "beograd", [edge, center])
+    assert verdict.startswith("проверить") and hit is edge
+    assert todo_mod.judge("Lipova 8", "8", "beograd", [])[0] == "не нашел"
+
+
+def test_neighbour_street_with_same_number_does_not_make_it_ambiguous():
+    # OpenStreetMap подмешивает другую улицу с тем же номером дома — это не второй кандидат
+    right = {"lat": "44.7995", "lon": "20.4871", "address": {"road": "Липова", "house_number": "8"}}
+    other = {"lat": "44.8460", "lon": "20.4117", "address": {"road": "Brestova", "house_number": "8"}}
+    verdict, hit = todo_mod.judge("Lipova 8", "8", "beograd", [right, other])
+    assert verdict == "надежно" and hit is right
 
 
 def test_publish_stops_when_a_third_of_businesses_vanish():
