@@ -236,6 +236,28 @@ def test_city_spellings_collapse_to_one_id(cell, ids):
     assert [cid for cid, _ in build.cities_of(cell)] == ids
 
 
+def test_online_in_the_address_column_is_an_online_business(isolated):
+    # 3 ноя «online» написали в колонку адреса при городе Beograd: это не точка, а онлайн-бизнес
+    data, _ = build.build(sheet(
+        "Torte,Torte za pse,12345678,online,Beograd,,,,,",
+        f'Engleski,Kursevi,12345679,Ulica 2a (moze i online),Novi Sad,"{gmaps(45.25, 19.84)}",,,,',
+    ))
+    online, address = data["businesses"]
+    assert online["online"] and online["locations"] == []
+    # «можно и онлайн» рядом с номером дома — адрес остается, точка на месте
+    assert not address["online"] and address["locations"][0]["lat"] == 45.25
+
+
+def test_continuation_row_without_city_keeps_the_business_city(isolated):
+    # вторая точка Willow пришла строкой-продолжением без города: она в том же городе, что и бизнес
+    data, _ = build.build(sheet(
+        f'Kafe,Kafe,12345678,A 1,Novi Sad,"{gmaps(45.25, 19.84)}",,,,',
+        f',,,B 2,,"{gmaps(45.26, 19.85)}",,,,',
+    ))
+    [b] = data["businesses"]
+    assert [loc["city"] for loc in b["locations"]] == ["novi-sad", "novi-sad"]
+
+
 def test_two_cities_for_two_addresses_pair_in_order(isolated):
     data, _ = build.build(sheet(
         f'Mreža,Kafe,12345678,"A 1\nB 2","Beograd, Novi Sad","{gmaps(44.81, 20.46)}\n{gmaps(45.25, 19.83)}",,,,'
