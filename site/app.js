@@ -73,7 +73,9 @@
     if (p && T[p]) return p;
     const s = store.get("komsije-lang");
     if (s && T[s]) return s;
-    return /^(sr|hr|bs|me)\b/i.test(navigator.language || "") ? "sr" : "ru";
+    // По умолчанию сербский: сайт для соседей в Сербии, а у многих сербов телефон на английском.
+    // Русский — только когда язык браузера русский, украинский, белорусский или казахский.
+    return /^(ru|uk|be|kk)\b/i.test(navigator.language || "") ? "ru" : "sr";
   }
 
   // Город по умолчанию — Белград: в режиме «Все» два города на одной карте

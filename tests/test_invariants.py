@@ -53,6 +53,12 @@ def test_tile_source_lives_in_config():
     assert "{z}" in json.loads((ROOT / "config.json").read_text(encoding="utf-8"))["tiles"]["url"]
 
 
+def test_serbian_is_the_default_language():
+    # инвариант 13: незнакомый язык браузера (часто английский у сербов) получает сербский, а не русский
+    body = APP_JS.split("function initialLang()", 1)[1].split("\n  }", 1)[0]
+    assert body.rstrip().endswith('? "ru" : "sr";')
+
+
 def test_build_never_writes_the_enrichment_layer():
     # инвариант 7: overrides.json пишут люди, сборка его только читает
     src = (SRC / "build.py").read_text(encoding="utf-8")
