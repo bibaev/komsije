@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Только главная: страницы бизнесов в поиск не идут (noindex, решение владельца 3 ноя) -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://komsije.cherdak.rs/</loc></url>
+</urlset>

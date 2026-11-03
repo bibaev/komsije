@@ -53,6 +53,21 @@ def test_tile_source_lives_in_config():
     assert "{z}" in json.loads((ROOT / "config.json").read_text(encoding="utf-8"))["tiles"]["url"]
 
 
+def test_only_the_main_page_goes_to_search():
+    # инвариант 14: главная открыта поиску и у нее один адрес, страницы бизнесов — нет (решение владельца 3 ноя)
+    from komsije import build
+    site = json.loads((ROOT / "config.json").read_text(encoding="utf-8"))["site_url"].rstrip("/") + "/"
+    index = (ROOT / "site" / "index.html").read_text(encoding="utf-8")
+    assert "noindex" not in index and f'<link rel="canonical" href="{site}">' in index
+    assert f"Sitemap: {site}sitemap.xml" in (ROOT / "site" / "robots.txt").read_text(encoding="utf-8")
+    sitemap = (ROOT / "site" / "sitemap.xml").read_text(encoding="utf-8")
+    assert sitemap.count("<loc>") == 1 and f"<loc>{site}</loc>" in sitemap
+    assert '<meta name="robots" content="noindex">' in build.STUB
+    # файл подтверждения Search Console: без него ресурс теряет подтверждение. Содержимое — из имени (соглашение Google)
+    for f in (ROOT / "site").glob("google*.html"):
+        assert f.read_text(encoding="utf-8") == f"google-site-verification: {f.name}"
+
+
 def test_serbian_is_the_default_language():
     # инвариант 13: незнакомый язык браузера (часто английский у сербов) получает сербский, а не русский
     body = APP_JS.split("function initialLang()", 1)[1].split("\n  }", 1)[0]
