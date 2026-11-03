@@ -16,7 +16,7 @@
 - Слой обогащения: `data/overrides.json` (по MB или ПИБ), категории: `data/categories.json`. Точка для адреса, у которого ссылка не даёт координат, — `points` в `overrides.json`, ключ — адрес дословно, как в таблице; искали и не нашли — `no_point`.
 - Что осталось обогатить — `python -m komsije.todo --geocode` (`src/komsije/todo.py`); порядок работы с новыми бизнесами — скилл `/enrich` (`.claude/commands/enrich.md`).
 - Подвал (контакт, репозиторий), автор инициативы для плашки источника и адрес сайта для превью — `config.json`.
-- Публикация: GitHub Pages, `.github/workflows/pages.yml` — на merge в `main` и вручную (Run workflow). Сборка каждый раз скачивает таблицу, поэтому публикация — это и сверка. PR проверяет `.github/workflows/checks.yml`, он ничего не публикует.
+- Публикация: GitHub Pages, `.github/workflows/pages.yml` — на merge в `main`, вручную (Run workflow) и по расписанию дважды в день, только днем. Сборка каждый раз скачивает таблицу, поэтому публикация — это и сверка. PR проверяет `.github/workflows/checks.yml`, он ничего не публикует.
 - Бизнес просит убрать себя — `"hidden": "<причина и дата>"` в `overrides.json`, без личных подробностей: строка видна всем.
 - Проверка: `.venv/bin/pytest -q && .venv/bin/ruff check .`
 
