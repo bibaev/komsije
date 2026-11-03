@@ -275,12 +275,16 @@ def assemble(text: str) -> tuple[dict, list[str], list[dict]]:
             ll = ll or (tuple(points[addr_key(addr)]) if addr_key(addr) in points else None)
             # Два города на два адреса — по порядку; иначе все точки в первом городе ячейки.
             city = city_ids[i] if len(city_ids) == n_locs > 1 else (city_ids[0] if city_ids else None)
-            route = link or (
+            # Ссылка ведет на карточку места в Google Maps: отзывы и фото, маршрут оттуда же. Ссылки из таблицы
+            # открывают карточку сами (3 ноя: 15 из 15 в выборке). Без ссылки ищем по имени и адресу: по одному
+            # адресу Google показывает дом, а не заведение в нем
+            who = name or (current["name"] if current else "")
+            maps = link or (
                 "https://www.google.com/maps/search/?api=1&query="
-                + urllib.parse.quote(f"{addr}, {rec.get('city', '').strip()}, Srbija"))
+                + urllib.parse.quote(", ".join(p for p in (who, addr, rec.get("city", "").strip(), "Srbija") if p)))
             locs.append({"address": addr, "city": city,
                          "lat": ll[0] if ll else None, "lng": ll[1] if ll else None,
-                         "route": route})
+                         "maps": maps})
         list_link = clean_url(links[0]) if links and not paired else None
 
         if not name:
