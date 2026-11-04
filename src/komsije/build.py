@@ -203,7 +203,7 @@ def cities_of(raw: str) -> list[tuple[str, dict]]:
     if not n or ONLINE.search(n):
         return []
     out: dict[str, dict] = {}
-    for part in re.split(r"[,/;]|\s+i\s+|\s+и\s+", raw):
+    for part in re.split(r"[,/;\n]|\s+i\s+|\s+и\s+", raw):
         p = norm(part)
         if not p:
             continue
@@ -250,6 +250,9 @@ def assemble(text: str) -> tuple[dict, list[str], list[dict]]:
         row_cities = cities_of(rec.get("city", ""))
         cities.update(row_cities)
         city_ids = [cid for cid, _ in row_cities]
+        # Город строкой на каждый адрес («Novi Sad\nNovi Sad\nBeograd», Julianna и Kofilin 4 ноя): строка города
+        # к строке адреса. Список городов выше повторы склеивает, по нему пары не составить
+        line_cities = [ids[0][0] if len(ids := cities_of(c)) == 1 else None for c in lines(rec.get("city", ""))]
         points = {addr_key(a): ll for a, ll in ov.get("points", {}).items()}
 
         # «online» пишут и в колонку адреса при обычном городе (3 ноя: психолог, торты для собак):
@@ -273,8 +276,11 @@ def assemble(text: str) -> tuple[dict, list[str], list[dict]]:
             # Ссылка «поделиться» с телефона и список мест ведут на поиск без координат:
             # точку по адресу ставят руками в overrides.json («points»).
             ll = ll or (tuple(points[addr_key(addr)]) if addr_key(addr) in points else None)
-            # Два города на два адреса — по порядку; иначе все точки в первом городе ячейки.
-            city = city_ids[i] if len(city_ids) == n_locs > 1 else (city_ids[0] if city_ids else None)
+            # Город строкой на адрес или два города на два адреса — по порядку; иначе все точки в первом городе ячейки.
+            if len(line_cities) == n_locs > 1 and all(line_cities):
+                city = line_cities[i]
+            else:
+                city = city_ids[i] if len(city_ids) == n_locs > 1 else (city_ids[0] if city_ids else None)
             # Ссылка ведет на карточку места в Google Maps: отзывы и фото, маршрут оттуда же. Ссылки из таблицы
             # открывают карточку сами (3 ноя: 15 из 15 в выборке). Без ссылки ищем по имени и адресу: по одному
             # адресу Google показывает дом, а не заведение в нем
@@ -321,6 +327,8 @@ def assemble(text: str) -> tuple[dict, list[str], list[dict]]:
             "_no_point": list(ov.get("no_point", [])),
             "name": name,
             "online": not city_ids or online_only,
+            # Города из ячейки: по ним фильтр города находит бизнес без адреса (сеть Fix Price, 4 ноя)
+            "cities": city_ids,
             "categories": ov.get("categories") or guess_categories(activity),
             "tags": ov.get("tags", {"ru": [], "sr": []}),
             "description": {"ru": ov.get("description_ru") or activity, "sr": ov.get("description_sr") or activity},

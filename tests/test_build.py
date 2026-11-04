@@ -259,6 +259,24 @@ def test_continuation_row_without_city_keeps_the_business_city(isolated):
     assert [loc["city"] for loc in b["locations"]] == ["novi-sad", "novi-sad"]
 
 
+def test_city_line_per_address_line_pairs_them(isolated):
+    # Julianna и Kofilin, 4 ноя: два кафе в Нови-Саде и третье в Белграде, город строкой на каждый адрес
+    data, _ = build.build(sheet(
+        f'Mreža,Kafe,12345678,"A 1\nB 2\nC 3","Novi Sad\nNovi Sad\nBeograd",'
+        f'"{gmaps(45.25, 19.84)}\n{gmaps(45.26, 19.85)}\n{gmaps(44.80, 20.45)}",,,,',
+    ))
+    [b] = data["businesses"]
+    assert [loc["city"] for loc in b["locations"]] == ["novi-sad", "novi-sad", "beograd"]
+    assert set(data["cities"]) == {"novi-sad", "beograd"}
+
+
+def test_business_without_address_keeps_its_cities(isolated):
+    # сеть без списка точек (Fix Price, 4 ноя): на карте ее нет, но фильтр города должен ее найти
+    data, _ = build.build(sheet('Mreža,Prodavnica,12345678,,"Beograd, Novi Sad",,,,,'))
+    [b] = data["businesses"]
+    assert (b["locations"], b["online"], b["cities"]) == ([], False, ["beograd", "novi-sad"])
+
+
 def test_address_without_link_searches_the_place_by_name(isolated):
     # по одному адресу Google показывает дом; с именем — карточку заведения с отзывами и фото,
     # и для строки-продолжения тоже, хотя имени в ней нет

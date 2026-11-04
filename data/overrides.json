@@ -304,5 +304,19 @@
                "points": {"Dragoslava Srejovica 6R": [44.8150275, 20.4898074]},
                "tags": {"ru": ["шаурма"], "sr": ["šavarma"]}},
   "67310713": {"name": "Moments Fotostudio", "categories": ["uslugi"], "description_ru": "Фотостудия",
-               "tags": {"ru": ["фотостудия", "фотограф"], "sr": ["foto studio", "fotograf"]}}
+               "tags": {"ru": ["фотостудия", "фотограф"], "sr": ["foto studio", "fotograf"]}},
+  "67568559": {"name": "prokudnik.cuts", "categories": ["krasota"], "description_ru": "Парикмахерская",
+               "tags": {"ru": ["парикмахерская"], "sr": ["frizer"]}},
+  "22138022": {"categories": ["magazin"], "description_ru": "Сеть магазинов низких цен",
+               "description_sr": "Lanac diskont prodavnica",
+               "tags": {"ru": ["дискаунтер"], "sr": ["diskont"]}},
+  "68347572": {"name": "Julianna, Kofilin", "categories": ["kofe", "bar"], "description_ru": "Бар Julianna и две кофейни Kofilin",
+               "description_sr": "Bar Julianna i dva kafića Kofilin",
+               "tags": {"ru": ["кофе", "бар"], "sr": ["kafa", "bar"]}},
+  "68818753": {"categories": ["kofe"], "description_ru": "Кафе",
+               "points": {"Cara Dušana 55": [45.2423408, 19.8254561]},
+               "tags": {"ru": ["кофе"], "sr": ["kafa"]}},
+  "68445736": {"categories": ["podarki"], "description_ru": "Цветочная студия",
+               "points": {"Bulevar despota Stefana 50": [44.816668, 20.4684591]},
+               "tags": {"ru": ["цветы"], "sr": ["cveće"]}}
 }

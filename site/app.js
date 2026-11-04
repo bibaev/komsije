@@ -138,7 +138,9 @@
   }));
 
   // --- фильтры -----------------------------------------------------------------
-  const inCity = (b, city) => city === "all" || (city === "online" ? b.online : b.locations.some((l) => l.city === city));
+  // Бизнес без адреса (сеть без списка точек) ищется по городам из таблицы; с адресами — только по ним
+  const inCity = (b, city) => city === "all" || (city === "online" ? b.online
+    : b.locations.length ? b.locations.some((l) => l.city === city) : (b.cities || []).includes(city));
   const inCat = (b, cat) => cat === "all" || b.categories.includes(cat);
   function inQuery(b) {
     if (!state.q) return true;
