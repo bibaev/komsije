@@ -45,7 +45,8 @@
                "points": {"Sportska dvorana prof. dr Branislav Pokrajac, ulaz A": [44.7634072, 20.4726519],
                           "Mix Markt, Sarajevska 70": [44.8008268, 20.4515571],
                           "Fakultet organizacionih studija „Eduka“": [44.8129041, 20.4674469],
-                          "TC Aviv Park, kod dva ulaza": [44.7859341, 20.5143203]},
+                          "TC Aviv Park, kod dva ulaza": [44.7859341, 20.5143203],
+                          "Prodavnica „Gubernija“": [44.7688806, 20.4789613]},
                "tags": {"ru": ["кофе с собой", "автоматы"], "sr": ["kafa za poneti", "aparati"]}},
 
   "68238463": {"name": "Sunrice Sushi", "categories": ["restorany"], "description_ru": "Суши-ресторан",
