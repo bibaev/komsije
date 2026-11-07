@@ -21,9 +21,17 @@
   44.8146094,
   20.4621911
  ],
+ "https://maps.app.goo.gl/59pQs11XprmEF2s88": [
+  44.8173194,
+  20.4762267
+ ],
  "https://maps.app.goo.gl/5RkFMX7sbLsthMNe6?g_st=ic": null,
  "https://maps.app.goo.gl/6SWJHjPVwkqmqMiC9?g_st=ic": null,
  "https://maps.app.goo.gl/6gZh5LZnKnZ19Yfa9?g_st=ic": null,
+ "https://maps.app.goo.gl/6rewKKPp67L1TnaN6": [
+  45.256665,
+  19.845353
+ ],
  "https://maps.app.goo.gl/7D57JKYYz56eA7Te6?g_st=ic": null,
  "https://maps.app.goo.gl/7RWQWmNugsfnEqG2A": [
   45.2478569,
@@ -39,6 +47,7 @@
  ],
  "https://maps.app.goo.gl/82632oKJvhi5gPHK6?g_st=ic": null,
  "https://maps.app.goo.gl/8P4dxauMK7LsWrpUA?g_st=ic": null,
+ "https://maps.app.goo.gl/8aw8xsKhYojKDT1z6?g_st=ic": null,
  "https://maps.app.goo.gl/94Kf2PE6HdRKicH47": [
   44.8137522,
   20.4604766
@@ -48,6 +57,10 @@
   20.4514611
  ],
  "https://maps.app.goo.gl/9XjMXuPZHGWsf282A": null,
+ "https://maps.app.goo.gl/9cvinSNZoztgFeaw5": [
+  45.2333547,
+  19.8624059
+ ],
  "https://maps.app.goo.gl/ADjiecNeeSWuVm329?g_st=ic": null,
  "https://maps.app.goo.gl/AVy76dMFuacbDKBM9?g_st=ic": null,
  "https://maps.app.goo.gl/AnWY9FXu9vrt6n2q6": [
@@ -58,6 +71,7 @@
   44.8020499,
   20.4529978
  ],
+ "https://maps.app.goo.gl/DUH3yHymMpUg1FqaA?g_st=ac": null,
  "https://maps.app.goo.gl/EdXK4ZnWaMozpgzW9?g_st=ic": null,
  "https://maps.app.goo.gl/ErGL8VpMMoKZMdax6?g_st=ic": null,
  "https://maps.app.goo.gl/Eu3N4HqUKkLW8ChP8": [
@@ -114,6 +128,10 @@
   20.4586392
  ],
  "https://maps.app.goo.gl/WRNYCgC9jrTiKPGM6?g_st=ic": null,
+ "https://maps.app.goo.gl/WjWk6rmxMhBGrfba8": [
+  44.8462869,
+  20.391871
+ ],
  "https://maps.app.goo.gl/XG7opHFGdLjLzmZd9": [
   44.8023617,
   20.45189
@@ -135,6 +153,11 @@
   45.2565536,
   19.8459636
  ],
+ "https://maps.app.goo.gl/bGVeGUqD7VXxmyDU9": [
+  44.8108503,
+  20.4618861
+ ],
+ "https://maps.app.goo.gl/bNpHsGKmYsFBE5UE8?g_st=ic": null,
  "https://maps.app.goo.gl/be1cKCsDPi2bmZVR8": [
   44.791858,
   20.4758074
@@ -161,8 +184,13 @@
   19.8350608
  ],
  "https://maps.app.goo.gl/f6JE87RxoPNHANbw8?g_st=ic": null,
+ "https://maps.app.goo.gl/fS4LMPaeyH2Ctnhw9": [
+  45.256308,
+  19.849645
+ ],
  "https://maps.app.goo.gl/ff27Tf69zXsXV3eX7?g_st=ic": null,
  "https://maps.app.goo.gl/fzj2nKjYgqo6skGEA?g_st=ic": null,
+ "https://maps.app.goo.gl/gZEqzXCX3WiYWE1u6?g_st=ac": null,
  "https://maps.app.goo.gl/hPixckfqfb9i69U98": [
   45.2566203,
   19.8485029
@@ -179,6 +207,7 @@
   45.2562751,
   19.8452956
  ],
+ "https://maps.app.goo.gl/jihji4WenA1K9Akx9?g_st=ic": null,
  "https://maps.app.goo.gl/k5Gtcdu8oAATnSKE7": [
   44.8075279,
   20.4816872
@@ -219,12 +248,23 @@
   20.4558161
  ],
  "https://maps.app.goo.gl/qAnVd44sH8XxBvpz6?g_st=ic": null,
+ "https://maps.app.goo.gl/qq45qm3vySGR2b7p9": [
+  44.8086421,
+  20.4636595
+ ],
  "https://maps.app.goo.gl/quN453quxRLb4K8w8": [
   44.8180548,
   20.4742822
  ],
  "https://maps.app.goo.gl/r8t5aV5mPShSMGX29?g_st=ac": null,
+ "https://maps.app.goo.gl/rUmdtgMtGYpi2jEm6?g_st=atm": null,
  "https://maps.app.goo.gl/rnDBWK2XBdkaV9rBA?g_st=ac": null,
+ "https://maps.app.goo.gl/sgJzL8KR5c9MmDEJA?g_st=ic": null,
+ "https://maps.app.goo.gl/tKbQovW75K1jNHav9": [
+  44.8217002,
+  20.4210691
+ ],
+ "https://maps.app.goo.gl/tev7w3KuQucnN77J8?g_st=ic": null,
  "https://maps.app.goo.gl/tpnJynR9fVa6MzS48": [
   44.8207997,
   20.4641341
@@ -243,16 +283,30 @@
   19.8484761
  ],
  "https://maps.app.goo.gl/wWQKjzbLGi8U7ZuSA?g_st=ac": null,
+ "https://maps.app.goo.gl/xrw15ihhfsRzhb4r9?g_st=ic": null,
  "https://maps.app.goo.gl/y8BJ5wYtsUcC49an9?g_st=ic": null,
+ "https://maps.app.goo.gl/zLcZY2wowqCroSRM6": [
+  44.8040815,
+  20.4834232
+ ],
  "https://maps.app.goo.gl/zaLft5hEZevnzGrh6": null,
  "https://maps.app.goo.gl/zbX8PfqgNJUseJTw8": [
   44.8086379,
   20.458397
  ],
  "https://maps.google.com/maps/place//data=!4m2!3m1!1s0x475a654c96ac5c6b:0x820f51599f089877?entry=s&sa=X&ved=2ahUKEwia7t2Gl-qXAxVpSPEDHSzPC5IQ4kB6BAgVEAA&hl=ru": null,
+ "https://share.google/4STH1id1jrTxbD920": null,
  "https://share.google/Q9lVR9AAEKx5g4pj6": null,
  "https://www.google.com/maps/place/Hair+extension+S28/@44.8086658,20.4615843,17z/data=!3m1!4b1!4m6!3m5!1s0x475a711985755603:0x3da5ec21cf17e54e!8m2!3d44.8086658!4d20.4641592!16s%2Fg%2F11w4gvp55g": [
   44.8086658,
   20.4641592
+ ],
+ "https://www.google.com/maps/place/HookahPlace+Belgrade/data=!4m7!3m6!1s0x475a71a7825917b7:0xeabc9ef378e25b37!8m2!3d44.7927919!4d20.4727558!16s%2Fg%2F11w7xl70nn!19sChIJtxdZgqdxWkcRN1viePOevOo?authuser=0&hl=ru&g_ep=EgoyMDI2MTEwMi4wIJJjKgBIAVAD&rclk=1": [
+  44.7927919,
+  20.4727558
+ ],
+ "https://www.google.com/maps/place/TrueRamen/@44.8148041,20.4533172,17z/data=!3m1!4b1!4m6!3m5!1s0x475a7beed5d86b67:0xdfeb7e72d816662b!8m2!3d44.8148041!4d20.4558921!16s%2Fg%2F11yp4700b6?entry=ttu&g_ep=EgoyMDI2MTEwMi4wIKXMDSoASAFQAw%3D%3D": [
+  44.8148041,
+  20.4558921
  ]
 }
