@@ -270,6 +270,18 @@ def test_city_line_per_address_line_pairs_them(isolated):
     assert set(data["cities"]) == {"novi-sad", "beograd"}
 
 
+def test_links_on_one_line_pair_with_addresses_on_one_line(isolated):
+    # Pivograd, 7 ноя: две ссылки через пробелы и два адреса через запятую — два места;
+    # при одной ссылке запятая остается внутри адреса («Mix Markt, Sarajevska 70»)
+    data, _ = build.build(sheet(
+        f'Pivo,Bar,12345678,"A 1, B 2",Beograd,"{gmaps(44.81, 20.46)}     {gmaps(44.82, 20.47)} ",,,,',
+        f'Market,Prodavnica,12345679,"Mix Markt, Sarajevska 70",Beograd,"{gmaps(44.80, 20.45)}",,,,',
+    ))
+    pivo, market = data["businesses"]
+    assert [(loc["address"], loc["lat"]) for loc in pivo["locations"]] == [("A 1", 44.81), ("B 2", 44.82)]
+    assert [loc["address"] for loc in market["locations"]] == ["Mix Markt, Sarajevska 70"]
+
+
 def test_business_without_address_keeps_its_cities(isolated):
     # сеть без списка точек (Fix Price, 4 ноя): на карте ее нет, но фильтр города должен ее найти
     data, _ = build.build(sheet('Mreža,Prodavnica,12345678,,"Beograd, Novi Sad",,,,,'))

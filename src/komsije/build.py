@@ -212,6 +212,19 @@ def cities_of(raw: str) -> list[tuple[str, dict]]:
     return list(out.items())
 
 
+def split_by_links(addrs: list[str], n_links: int) -> list[str]:
+    """Два адреса в одной строке через запятую при двух ссылках («Hadži Melentijeva 59, Strahinjića Bana 72a»,
+    Pivograd 7 ноя) → два адреса. Запятая чаще стоит внутри одного адреса («Mix Markt, Sarajevska 70»,
+    «Strahinjića Bana, 59»), поэтому режем, только когда ссылок больше, чем строк адреса, после разреза
+    их становится поровну и в каждой части есть и улица, и номер дома."""
+    if n_links <= len(addrs):
+        return addrs
+    parts = [p.strip() for a in addrs for p in a.split(",") if p.strip()]
+    if len(parts) != n_links or not all(re.search(r"[^\W\d]", p) and re.search(r"\d", p) for p in parts):
+        return addrs
+    return parts
+
+
 def build(text: str) -> tuple[dict, list[str]]:
     data, warnings, _ = assemble(text)
     return data, warnings
@@ -262,7 +275,9 @@ def assemble(text: str) -> tuple[dict, list[str], list[dict]]:
         addrs = [a for a in all_addrs if not (ONLINE.search(norm(a)) and not re.search(r"\d", a))]
         online_only = bool(all_addrs) and not addrs
         # В колонку карт пишут и текст («Radim onlajn…»): точку дают только ссылки.
-        links = [u for u in lines(rec.get("maps", "")) if clean_url(u)]
+        # Несколько ссылок бывают и в одной строке через пробелы (Pivograd, 7 ноя): каждая — своя.
+        links = [w for line in lines(rec.get("maps", "")) for w in line.split() if clean_url(w)]
+        addrs = split_by_links(addrs, len(links))
         used.update(links)
         # Одна ссылка на несколько адресов (Smart Coffee) — это список мест,
         # а не точка: координат в нём нет.
